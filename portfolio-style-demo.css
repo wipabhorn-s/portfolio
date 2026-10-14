@@ -1,0 +1,443 @@
+:root{
+  /* theme: deep plum night + pink */
+  --bg:#120B1C;          /* page background: purple so dark it is almost black */
+  --card:#1E1530;        /* raised surfaces */
+  --line:#33264A;        /* borders */
+  --ink:#F7EEF8;         /* main text */
+  --ink-soft:#A99BBA;    /* secondary text */
+  --accent:#FF6FAE;      /* bright pink: buttons, highlights */
+  --accent-deep:#D9327E; /* deeper pink: gradients, hover */
+  --accent-soft:#F7B6D2; /* pastel pink */
+  --lavender:#C9B8F5;
+  --radius-lg:40px; --radius-md:20px; --radius-sm:12px;
+  --sans:"Inter", -apple-system, sans-serif;
+  --disp:"DM Sans", -apple-system, sans-serif;
+}
+:root[data-theme="dark"]{
+  --bg:#111111; --card:#1B1B1B; --line:#2A2A2A; --ink:#F7F7F7; --ink-soft:#9A9A9A;
+}
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{ margin:0; background:var(--bg); color:var(--ink); font-family:var(--sans); line-height:1.5; overflow-x:hidden; }
+h1,h2,h3{ font-family:var(--disp); font-weight:600; margin:0; letter-spacing:-0.02em; }
+p{ margin:0; color:var(--ink-soft); }
+a{ text-decoration:none; color:inherit; }
+.wrap{ max-width:1100px; margin:0 auto; padding:0 28px; }
+@media (max-width:640px){ .wrap{ padding:0 20px; } }
+
+.btn-pill{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:12px 24px; border-radius:100px; color:#FFFFFF;
+  background:linear-gradient(135deg, var(--accent), var(--accent-deep));
+  box-shadow:0 8px 24px rgba(255,111,174,.35);
+  font-size:14px; font-weight:600; border:none; cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.btn-pill:hover{ transform:translateY(-2px); box-shadow:0 12px 32px rgba(255,111,174,.55); }
+.btn-pill-outline{
+  display:inline-flex; padding:12px 24px; border-radius:100px; border:1px solid var(--line);
+  font-size:14px; color:var(--ink);
+  transition:border-color .2s ease, background .2s ease;
+}
+.btn-pill-outline:hover{ border-color:var(--accent-soft); background:rgba(255,255,255,.04); }
+
+/* ---------- nav ---------- */
+nav{ position:sticky; top:0; z-index:40; display:grid; grid-template-columns: 1fr auto 1fr; align-items:center;
+  padding:16px 28px; background:rgba(18,11,28,.72); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+/* brand: "Praew" signature + a little twinkling star */
+nav .brand{ display:flex; align-items:flex-start; gap:2px; justify-self:start; height:36px; } /* fixed height: nav stays as tall as before */
+nav .brand-sign{ font-family:"Mrs Saint Delafield", cursive; font-size:40px; line-height:40px; margin-top:6px; /* script fonts sit high: nudge down to the true middle */ color:var(--ink); padding-right:4px; }
+nav .brand-star{ display:inline-block; margin-top:8px; font-size:13px; color:var(--accent); text-shadow:0 0 8px rgba(255,111,174,.8); animation:brand-twinkle 2.4s ease-in-out infinite; }
+@keyframes brand-twinkle{ 50%{ opacity:.4; transform:scale(.7) rotate(45deg); } }
+@media (prefers-reduced-motion:reduce){ nav .brand-star{ animation:none; } }
+nav .links{ justify-self: center; gap:8px; background:var(--card); border-radius:100px; padding:10px; font-size:14px; }
+nav .links a{ position:relative; z-index:1; padding:6px 16px; border-radius:100px; color:var(--ink-soft); transition:color .3s ease; }
+nav .links a:hover{ color:var(--ink); }
+
+/* SCROLLSPY: the link of the section you are looking at gets a pink pill.
+   The pill is ONE element (.nav-pill) that slides between links, made in
+   portfolio-style-demo.js, which also adds .active to the current link. */
+nav .links{ position:relative; display:flex; align-items:center; padding:4px; } /* same overall height as before */
+nav .links a.active{ color:#FFFFFF; }
+nav .nav-pill{
+  position:absolute; top:4px; bottom:4px; left:0; width:0; z-index:0;
+  border-radius:100px; opacity:0;
+  background:linear-gradient(135deg, var(--accent), var(--accent-deep));
+  box-shadow:0 4px 16px rgba(255,111,174,.45);
+  transition:transform .45s cubic-bezier(.2,.8,.2,1), width .45s cubic-bezier(.2,.8,.2,1), opacity .3s ease;
+}
+@media (prefers-reduced-motion:reduce){ nav .nav-pill{ transition:opacity .2s; } }
+@media (max-width:700px){ nav .links{ display:none; } }
+
+/* ==================================================================
+   TECHNIQUE A — sticky pinned background + cards that scroll over it
+   naturally (pure CSS, this is how your reference site actually does it —
+   no JavaScript needed)
+   ================================================================== */
+.works{ position:relative; }
+.works-sticky{
+  position:sticky; top:0; height:100vh; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  z-index:0;
+}
+.pin-bg{ position:absolute; inset:0; background:
+    radial-gradient(circle at 30% 20%, rgba(255,111,174,.35) 0%, transparent 45%),
+    linear-gradient(180deg, #1B1029 0%, #3A1F52 55%, #5E2A62 100%); }
+/* LIQUID GRADIENT: soft pink / orchid / violet pools that swirl into each
+   other like water. No dark colours and no hard edges.
+   How: two huge round "colour fields" (::before and ::after), each painted
+   with a few very soft radial gradients, turn slowly in opposite directions
+   around slightly different centres. Where they overlap the colours blend,
+   and because a full turn ends where it started, the motion never jumps.
+   Only `transform` is animated, which the browser does on the GPU. */
+.pin-bg{ overflow:hidden; background:#8C48AC; } /* base: a mid orchid, shows between the pools */
+.pin-bg::before, .pin-bg::after{
+  content:""; position:absolute; left:50%; top:50%;
+  width:170vmax; height:170vmax; margin:-85vmax 0 0 -85vmax; /* big enough to cover the corners while turning */
+  will-change:transform;
+}
+.pin-bg::before{
+  background:
+    radial-gradient(circle at 30% 34%, #E2689F 0%, transparent 34%),
+    radial-gradient(circle at 68% 30%, #6B5CE2 0%, transparent 36%),
+    radial-gradient(circle at 64% 70%, #D2559E 0%, transparent 36%),
+    radial-gradient(circle at 30% 68%, #7E4FD2 0%, transparent 34%);
+  transform-origin:46% 54%;
+  animation:liquid-turn 14s linear infinite;          /* smaller number = faster */
+}
+.pin-bg::after{
+  background:
+    radial-gradient(circle at 50% 28%, #9A6AE6 0%, transparent 32%),
+    radial-gradient(circle at 74% 56%, #EA7FB0 0%, transparent 32%),
+    radial-gradient(circle at 44% 74%, #7A62E0 0%, transparent 34%),
+    radial-gradient(circle at 26% 46%, #D060A8 0%, transparent 32%);
+  opacity:.7;
+  transform-origin:55% 47%;
+  animation:liquid-turn 20s linear infinite reverse;  /* the other way, at a different speed */
+}
+@keyframes liquid-turn{ to{ transform:rotate(360deg); } }
+@media (prefers-reduced-motion:reduce){ .pin-bg::before, .pin-bg::after{ animation:none; } }
+/* BIG STARS: a handful of white 4-point stars over the liquid background.
+   Each one grows, glows and turns a little, then fades back, on its own delay. */
+.pin-stars{ position:absolute; inset:0; pointer-events:none; }
+.pin-star{
+  position:absolute; width:var(--s); height:auto; fill:#FFFFFF; /* --s = size, set on each star in the HTML */
+  filter:drop-shadow(0 0 8px rgba(255,255,255,.95)) drop-shadow(0 0 22px rgba(255,214,234,.7));
+  animation:pin-twinkle 3.6s ease-in-out infinite;
+}
+@keyframes pin-twinkle{
+  0%, 100%{ opacity:.25; transform:scale(.5) rotate(0deg); }
+  50%{ opacity:1; transform:scale(1) rotate(45deg); }
+}
+@media (max-width:700px){ .pin-star{ width:calc(var(--s) * .65); } } /* a bit smaller on phones */
+@media (prefers-reduced-motion:reduce){ .pin-star{ animation:none; opacity:.85; } }
+.pin-heading{ position:relative; z-index:1; text-align:center; transition:opacity .1s linear; }
+.pin-heading h1{ font-size:clamp(34px,5.4vw,56px); color:var(--ink); }
+.pin-heading p{ margin-top:14px; color:var(--ink-soft); max-width:420px; }
+.pin-heading .btn-pill{ margin-top:22px; }
+/* the background is lighter now, so the text gets a soft shadow and a brighter subtitle */
+.pin-heading h1{ text-shadow:0 2px 26px rgba(50,15,75,.4); }
+.pin-heading p{ color:rgba(255,255,255,.88); text-shadow:0 1px 14px rgba(50,15,75,.35); }
+
+/* pulled up over the sticky background by -100vh, so it starts
+   overlapping it right away instead of appearing only after */
+.works-cards{
+  position:relative; z-index:1; margin-top:-100vh;
+  padding:100vh 28px 18vh; display:flex; flex-direction:column;
+  align-items:center; gap:64px;
+}
+.reveal-card{
+  width:100%; max-width:1200px; height:74vh;
+  background:var(--card); border-radius:var(--radius-lg);
+  display:flex; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.45);
+}
+.reveal-card .rc-body{ flex:1; padding:56px; display:flex; flex-direction:column; justify-content:center; gap:18px; }
+.reveal-card .rc-tag{ display:inline-block; width:fit-content; font-size:13px; color:var(--ink-soft); border:1px solid var(--line); border-radius:100px; padding:5px 14px; }
+.reveal-card .rc-tag + h3{ font-size:clamp(28px,3.6vw,42px); }
+.reveal-card .rc-body p{ max-width:420px; }
+.reveal-card .rc-media{ flex:1; background:linear-gradient(135deg,#4b6f9c,#8bb7dd); }
+/* PROJECT CARD: frosted glass with no border, just a soft purple shadow */
+.reveal-card{
+  position:relative;
+  /* FROSTED GLASS: a see-through dark tint, and everything behind the card
+     (the moving colours) is blurred, like looking through frosted glass */
+  background:rgba(32,18,56,.42);
+  -webkit-backdrop-filter:blur(24px) saturate(150%);
+          backdrop-filter:blur(24px) saturate(150%);
+  box-shadow:0 30px 70px -24px rgba(60,15,100,.55);
+}
+/* browsers without backdrop-filter get a solid card instead */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .reveal-card{ background:linear-gradient(160deg, #251A3B 0%, #1A1229 100%); }
+}
+/* lighter text so it stays easy to read on the glass */
+.reveal-card .rc-body p{ color:rgba(255,255,255,.8); }
+.reveal-card .rc-tag{ color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.22); }
+.reveal-card .rc-stack li{ color:#FFFFFF; background:rgba(255,255,255,.14); }
+.reveal-card .btn-pill-outline{ border-color:rgba(255,255,255,.3); }
+
+/* project cover: a screenshot of the live site, peeking in from the
+   bottom-right corner over the card's gradient (top-left of the site shows) */
+.reveal-card .rc-media{ position:relative; overflow:hidden; }
+.reveal-card .rc-shot{
+  position:absolute; top:12%; left:9%; width:100%; height:100%;
+  object-fit:cover; object-position:left top;
+  border-radius:14px 0 0 0; box-shadow:0 20px 50px rgba(0,0,0,.35);
+  transition:transform .5s cubic-bezier(.2,.8,.2,1);
+}
+.reveal-card:hover .rc-shot{ transform:translate(-2%,-2%); }
+@media (prefers-reduced-motion:reduce){ .reveal-card .rc-shot{ transition:none; } }
+/* project details: one highlighted line, tech-stack chips, buttons */
+.reveal-card.reveal-card{ height:auto; min-height:74vh; } /* grows on short screens instead of cutting off the text */
+.reveal-card .rc-role{ font-size:14px; }
+.reveal-card .rc-role strong{ color:var(--ink); font-weight:600; }
+.reveal-card .rc-stack{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px; max-width:440px; }
+.reveal-card .rc-stack li{ font-size:12px; color:var(--accent-soft); background:rgba(255,111,174,.1); border-radius:100px; padding:4px 11px; }
+.reveal-card .rc-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+@media (max-width:700px){
+  .reveal-card.reveal-card{ max-height:none; } /* cards now hold more text: never clip the buttons */
+  .reveal-card .rc-media:has(.rc-shot){ min-height:210px; }
+  .reveal-card{ flex-direction:column; height:auto; max-height:82vh; }
+  .reveal-card .rc-media{ min-height:140px; order:-1; }
+  .reveal-card .rc-body{ padding:32px 24px; }
+}
+
+/* DESKTOP TOOLS */
+/* ==================================================================
+   Desktop tools — a plain section after the web projects: a heading
+   and three text cards (no images).
+   ================================================================== */
+.desk{ padding:120px 0 10px; }
+.desk-head{ max-width:640px; margin-bottom:40px; }
+.desk-kicker{ font-size:13px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); }
+.desk-head h2{ margin-top:10px; font-size:clamp(30px,4.4vw,48px); line-height:1.05; color:var(--ink); }
+.desk-head p{ margin-top:16px; }
+.desk-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+@media (max-width:900px){ .desk-grid{ grid-template-columns:1fr; } .desk{ padding-top:80px; } }
+.desk-card{
+  background:var(--card); border:1px solid var(--line); border-radius:var(--radius-md); padding:28px;
+  display:flex; flex-direction:column; gap:14px;
+  transition:border-color .2s ease, transform .2s ease;
+}
+.desk-card:hover{ border-color:var(--accent-soft); transform:translateY(-3px); }
+.desk-card h3{ font-size:21px; }
+.desk-card p{ font-size:14px; }
+.desk-stack{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px; }
+.desk-stack li{ font-size:12px; color:var(--accent-soft); background:rgba(255,111,174,.1); border-radius:100px; padding:4px 11px; }
+.desk-card .btn-pill-outline{ margin-top:auto; align-self:flex-start; }
+@media (prefers-reduced-motion:reduce){ .desk-card{ transition:none; } .desk-card:hover{ transform:none; } }
+
+/* ==================================================================
+   TECHNIQUE B — auto-rotating circular gallery (picture 1)
+   ================================================================== */
+.about-sec{ padding:130px 0; text-align:center; }
+.orbit-wrap{ position:relative; width:min(560px,86vw); height:min(560px,86vw); margin:0 auto; }
+.ring{ position:absolute; inset:0; animation:spin 40s linear infinite; }
+.slot{ position:absolute; top:50%; left:50%; width:78px; height:78px; margin:-39px 0 0 -39px; }
+.tile{ width:100%; height:100%; border-radius:16px; animation:counterspin 40s linear infinite; box-shadow:0 8px 20px rgba(0,0,0,.08); }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+@keyframes counterspin{ to{ transform:rotate(-360deg); } }
+.orbit-center{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:2; }
+.orbit-center-inner{ max-width:300px; }
+.orbit-center-inner p{ font-size:15px; }
+.orbit-center-inner .btn-pill-outline{ margin-top:20px; }
+@media (prefers-reduced-motion:reduce){ .ring,.tile{ animation:none; } }
+/* the ring shrinks with the screen: before, the tiles sat at a fixed 220px
+   radius and stuck out past the edge of a phone, making the page wider than
+   the screen (the empty strip on the right) */
+.orbit-wrap{ --orbit-r:min(220px, 34vw); --orbit-tile:min(78px, 12vw); }
+.slot{ width:var(--orbit-tile); height:var(--orbit-tile); margin:calc(var(--orbit-tile) / -2) 0 0 calc(var(--orbit-tile) / -2); }
+.orbit-center-inner{ max-width:min(300px, 46vw); }
+@media (max-width:640px){ .tile{ border-radius:10px; } .orbit-center-inner p{ font-size:13px; } }
+
+/* ==================================================================
+   TECHNIQUE C — vertical auto-scroll inside a card (picture 2)
+   TECHNIQUE D — hover reveals a button below the card (picture 3)
+   ================================================================== */
+.highlights{ padding:60px 0 130px; }
+.hgrid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+@media (max-width:820px){ .hgrid{ grid-template-columns:1fr; } }
+
+.hcard{ background:var(--card); border:1px solid var(--line); border-radius:var(--radius-md); padding:28px; display:flex; flex-direction:column; gap:16px; min-height:340px; }
+.hcard .hc-icon{ width:44px; height:44px; border-radius:12px; background:var(--accent); }
+.hcard h3{ font-size:19px; }
+.hcard .hc-text{ font-size:14px; }
+.hcard .hc-btn{
+  opacity:0; transform:translateY(8px); transition:opacity .25s ease, transform .25s ease;
+  margin-top:auto; align-self:flex-start;
+}
+.hcard:hover .hc-btn, .hcard:focus-within .hc-btn{ opacity:1; transform:translateY(0); }
+
+.vscroll{ height:150px; border-radius:14px; overflow:hidden; position:relative; }
+.vscroll::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(30,21,48,0) 60%, var(--card) 100%); pointer-events:none; }
+.vscroll-track{ display:flex; flex-direction:column; animation:scroll-y 16s linear infinite; }
+.vscroll-track .vtile{ height:150px; flex:none; }
+@keyframes scroll-y{ from{ transform:translateY(0); } to{ transform:translateY(-50%); } }
+@media (prefers-reduced-motion:reduce){ .vscroll-track{ animation:none; } }
+
+/* icons: in the highlight cards, and in front of each contact button */
+.hcard .hc-icon{ display:grid; place-items:center; color:#FFFFFF; }
+.links-icon{ flex:none; color:var(--accent-soft); }
+.links-list a:has(.links-icon){ justify-content:flex-start; }
+.links-list a:has(.links-icon) span{ margin-left:auto; }
+
+/* CONTACT */
+/* ==================================================================
+   Contact — heading on the left, the channel buttons on the right.
+   The buttons reuse the .links-list styles from the links page.
+   ================================================================== */
+.contact{ padding:40px 0 120px; }
+.contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; }
+.contact-text h2{ margin-top:10px; font-size:clamp(34px,5vw,56px); line-height:1.04; color:var(--ink); }
+.contact-text p{ margin-top:18px; max-width:420px; }
+.contact .links-list{ margin-top:0; }
+@media (max-width:820px){
+  .contact{ padding:20px 0 90px; }
+  .contact-grid{ grid-template-columns:1fr; gap:32px; }
+}
+
+footer{ padding:50px 0; border-top:1px solid var(--line); text-align:center; }
+footer p{ font-size:13px; }
+
+/* HERO */
+/* ==================================================================
+   Hero — headline on the left, 3D lanyard card on the right.
+   Layers, back to front:
+     .hero-stars    twinkling stars + shooting stars   (hero-sparkle.js)
+     .hero-text     headline + buttons
+     .hero-stage    3D card canvas                     (hero-lanyard.js)
+     .hero-trail    sparkles that follow the cursor    (hero-sparkle.js)
+   Every canvas has pointer-events:none, so it never blocks scrolling
+   or the buttons.
+   ================================================================== */
+.hero{
+  position:relative; height:100vh; min-height:560px; overflow:hidden;
+  display:flex; align-items:center;
+  touch-action:pan-y; /* vertical swipes scroll the page, even when they start on the card */
+  background:
+    radial-gradient(ellipse at 74% 42%, rgba(150,90,220,.32) 0%, transparent 45%),
+    radial-gradient(ellipse at 15% 90%, rgba(255,111,174,.14) 0%, transparent 40%),
+    linear-gradient(180deg, #170E24 0%, var(--bg) 100%);
+}
+.hero-stars, .hero-trail{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.hero-stars{ z-index:0; }
+.hero-trail{ z-index:3; }
+
+.hero-text{ position:relative; z-index:1; width:100%; max-width:1100px; margin:0 auto; padding:0 28px; }
+.hero-text h1{ max-width:56%; font-size:clamp(44px,7.2vw,96px); line-height:.98; letter-spacing:-0.035em; color:var(--ink); }
+.hero-sub{
+  margin-top:22px; display:inline-flex; align-items:center; gap:10px;
+  font-family:var(--disp); font-size:clamp(22px,2.6vw,32px); font-weight:700; letter-spacing:-0.01em;
+  background:linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 55%, var(--lavender) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero-sub::before{ /* little sparkle in front of the role */
+  content:"\2726"; display:inline-block; font-size:.8em; color:var(--accent);
+  -webkit-text-fill-color:var(--accent);
+  animation:pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse{ 50%{ opacity:.35; transform:scale(.8) rotate(45deg); } }
+.hero-actions{ margin-top:32px; display:flex; flex-wrap:wrap; gap:12px; }
+
+/* full name: soft white, with a pink-lavender light sweeping across BOTH lines */
+.hero-text .shimmer{
+  background:linear-gradient(100deg,
+    var(--ink) 0%, var(--ink) 38%,
+    var(--accent-soft) 45%, #FFFFFF 50%, var(--lavender) 55%,
+    var(--ink) 62%, var(--ink) 100%);
+  background-size:300% 100%;
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  animation:shimmer 6s ease-in-out infinite;
+}
+@keyframes shimmer{ 0%{ background-position:100% 0; } 55%,100%{ background-position:0% 0; } }
+
+/* each part of the hero text slides up once when the page opens */
+.hero-text > *{ opacity:0; transform:translateY(24px); animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards; }
+.hero-text > :nth-child(2){ animation-delay:.12s; }
+.hero-text > :nth-child(3){ animation-delay:.24s; }
+@keyframes rise{ to{ opacity:1; transform:none; } }
+
+.hero-stage{ position:absolute; inset:0; z-index:2; pointer-events:none; }
+.hero-canvas{ display:block; width:100%; height:100%; }
+
+/* cursor feedback, toggled from hero-lanyard.js */
+.hero.is-grabbable{ cursor:grab; }
+.hero.is-dragging{ cursor:grabbing; user-select:none; -webkit-user-select:none; }
+
+/* MOBILE: the first screen shows ONLY the hanging card (full height).
+   The name + buttons sit below it, and the nav bar slides in once you
+   start scrolling. portfolio-style-demo.js adds the classes:
+     body.scrolled   -> nav visible (removed again at the very top)
+     body.text-in    -> name rises in (added once)                      */
+@media (max-width:820px){
+  .hero{ height:auto; min-height:0; flex-direction:column; align-items:stretch; padding-bottom:80px; background:
+    radial-gradient(ellipse at 50% 35%, rgba(150,90,220,.32) 0%, transparent 50%),
+    linear-gradient(180deg, #170E24 0%, var(--bg) 100%); }
+  .hero-stage{ position:relative; inset:auto; order:0; flex:none; height:100vh; height:100svh; }
+  .hero-text{ order:1; padding:8px 20px 0; }
+  .hero-text h1{ max-width:none; }
+  .hero-sub{ margin-top:14px; }
+  .hero-actions{ margin-top:22px; }
+
+  nav{ position:fixed; top:0; left:0; right:0;
+       transform:translateY(-100%); opacity:0;
+       transition:transform .45s cubic-bezier(.2,.8,.2,1), opacity .45s ease; }
+  .scrolled nav{ transform:none; opacity:1; }
+
+  .hero-text > *{ animation-name:none; }               /* wait until scrolled... */
+  .text-in .hero-text > *{ animation-name:rise; }      /* ...then rise in */
+}
+
+@media (prefers-reduced-motion:reduce){
+  nav{ transition:none !important; }
+  .hero-text .shimmer{ animation:none; background-position:0% 0; }
+  .hero-sub::before{ animation:none; }
+  .hero-text > *{ animation:none; opacity:1; transform:none; }
+}
+
+/* LINKS PAGE */
+/* ==================================================================
+   links.html — the page the QR code on the card opens: one button per
+   channel. Made for phones first.
+   ================================================================== */
+.links-page{
+  min-height:100vh; min-height:100svh; display:flex; align-items:center; justify-content:center; padding:48px 20px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(150,90,220,.32) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,111,174,.14) 0%, transparent 45%),
+    var(--bg);
+}
+.links-page{ position:relative; overflow:hidden; } /* holds the star canvases */
+.links-card{ position:relative; z-index:1; width:100%; max-width:420px; text-align:center; }
+.links-sign{ font-family:"Mrs Saint Delafield", cursive; font-size:72px; line-height:1; color:var(--ink); }
+/* the same little twinkling star as the nav logo */
+.links-star{ display:inline-block; vertical-align:top; margin:4px 0 0 6px; font-family:var(--sans); font-size:20px; line-height:1;
+  color:var(--accent); text-shadow:0 0 8px rgba(255,111,174,.8); animation:brand-twinkle 2.4s ease-in-out infinite; }
+@media (prefers-reduced-motion:reduce){ .links-star{ animation:none; } }
+.links-card h1{ margin-top:6px; font-size:28px; }
+.links-role{ margin-top:6px; font-family:var(--disp); font-weight:700; color:var(--accent); }
+.links-list{ list-style:none; margin:32px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+.links-list a{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:16px 22px; border-radius:100px; border:1px solid var(--line); background:var(--card);
+  font-family:var(--disp); font-weight:600; font-size:16px; color:var(--ink);
+  transition:border-color .2s ease, transform .2s ease;
+}
+.links-list a:hover, .links-list a:focus-visible{ border-color:var(--accent-soft); transform:translateY(-2px); }
+.links-list a span{ font-family:var(--sans); font-weight:400; font-size:13px; color:var(--ink-soft); }
+.links-back{ display:inline-flex; margin-top:28px; }
+/* email row: the same pill as the others, with a copy icon at its right end */
+.links-row{ position:relative; }
+.links-row a{ padding-right:58px; flex-wrap:wrap; row-gap:2px; } /* room for the icon */
+.links-copy{
+  position:absolute; top:50%; right:10px; width:40px; height:40px; transform:translateY(-50%);
+  display:flex; align-items:center; justify-content:center; padding:0;
+  border:none; border-radius:100px; background:transparent; color:var(--ink-soft); cursor:pointer;
+  transition:color .2s ease, background .2s ease, transform .2s ease;
+}
+.links-row a:hover + .links-copy, .links-row a:focus-visible + .links-copy{ transform:translateY(calc(-50% - 2px)); } /* lifts with the pill */
+.links-copy:hover, .links-copy:focus-visible{ color:var(--ink); background:rgba(255,255,255,.08); }
+.links-copy .icon-done{ display:none; }
+.links-copy.is-copied{ color:var(--accent); }
+.links-copy.is-copied .icon-copy{ display:none; }
+.links-copy.is-copied .icon-done{ display:block; }
