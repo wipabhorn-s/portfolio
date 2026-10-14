@@ -3,7 +3,7 @@
 
    Three.js draws it. There is NO physics engine any more: the motion is
    a handful of springs written by hand, so every number is easy to read
-   and tune. (The old cannon-es version is saved as hero-lanyard.backup.js)
+   and tune.
 
    Moving parts (all springs:  acceleration = -k * position - c * velocity)
      dropY   whole lanyard falls in from above and bounces slightly

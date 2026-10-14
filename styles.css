@@ -56,7 +56,7 @@ nav .links a:hover{ color:var(--ink); }
 
 /* SCROLLSPY: the link of the section you are looking at gets a pink pill.
    The pill is ONE element (.nav-pill) that slides between links, made in
-   portfolio-style-demo.js, which also adds .active to the current link. */
+   main.js, which also adds .active to the current link. */
 nav .links{ position:relative; display:flex; align-items:center; padding:4px; } /* same overall height as before */
 nav .links a.active{ color:#FFFFFF; }
 nav .nav-pill{
@@ -366,7 +366,7 @@ footer p{ font-size:13px; }
 
 /* MOBILE: the first screen shows ONLY the hanging card (full height).
    The name + buttons sit below it, and the nav bar slides in once you
-   start scrolling. portfolio-style-demo.js adds the classes:
+   start scrolling. main.js adds the classes:
      body.scrolled   -> nav visible (removed again at the very top)
      body.text-in    -> name rises in (added once)                      */
 @media (max-width:820px){
