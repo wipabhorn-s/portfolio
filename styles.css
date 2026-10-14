@@ -173,7 +173,6 @@ nav .nav-pill{
 /* lighter text so it stays easy to read on the glass */
 .reveal-card .rc-body p{ color:rgba(255,255,255,.8); }
 .reveal-card .rc-tag{ color:rgba(255,255,255,.85); border-color:rgba(255,255,255,.22); }
-.reveal-card .rc-stack li{ color:#FFFFFF; background:rgba(255,255,255,.14); }
 .reveal-card .btn-pill-outline{ border-color:rgba(255,255,255,.3); }
 
 /* project cover: a screenshot of the live site, peeking in from the
@@ -192,7 +191,10 @@ nav .nav-pill{
 .reveal-card .rc-role{ font-size:14px; }
 .reveal-card .rc-role strong{ color:var(--ink); font-weight:600; }
 .reveal-card .rc-stack{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:6px; max-width:440px; }
-.reveal-card .rc-stack li{ font-size:12px; color:var(--accent-soft); background:rgba(255,111,174,.1); border-radius:100px; padding:4px 11px; }
+.reveal-card .rc-stack li{ /* dark chips so they stand out on the frosted glass */
+  font-size:12px; font-weight:500; color:#FFE6F2; background:rgba(24,10,44,.58);
+  border-radius:100px; padding:5px 12px; box-shadow:0 2px 8px rgba(30,10,60,.25);
+}
 .reveal-card .rc-actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
 @media (max-width:700px){
   .reveal-card.reveal-card{ max-height:none; } /* cards now hold more text: never clip the buttons */
