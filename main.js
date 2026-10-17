@@ -20,7 +20,7 @@
 
   /* ---- build the vertical auto-scroll strip (Technique C) ---- */
   var track = document.getElementById('vTrack');
-  var vShots = ['images/learnora.jpg', 'images/aum-stocks.jpg']; // covers of the live projects
+  var vShots = ['images/learnora.jpg', 'images/aum-stocks.jpg', 'images/matchback.jpg']; // covers of the live projects
   for (var loop = 0; loop < 2; loop++){ // duplicate set = seamless loop
     vShots.forEach(function(src){
       var t = document.createElement('div');
