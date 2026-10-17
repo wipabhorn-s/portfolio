@@ -5,7 +5,7 @@
     ['typescript', 'TypeScript'], ['javascript', 'JavaScript'], ['react', 'React'],
     ['nextdotjs', 'Next.js'], ['nodedotjs', 'Node.js'], ['nestjs', 'NestJS'],
     ['postgresql', 'PostgreSQL'], ['prisma', 'Prisma'], ['tailwindcss', 'Tailwind CSS'],
-    ['git', 'Git'], ['github', 'GitHub'], ['dotnet', '.NET'], ['stripe', 'Stripe'], ['claude', 'Claude Code']
+    ['git', 'Git'], ['github', 'GitHub'], ['dotnet', '.NET'], ['openai', 'Codex'], ['claude', 'Claude Code']
   ];
 
   /* ---- build the orbit ring (Technique B) ---- */
