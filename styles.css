@@ -264,8 +264,25 @@ nav .nav-pill{
 .links-list a:has(.links-icon){ justify-content:flex-start; }
 .links-list a:has(.links-icon) span{ margin-left:auto; }
 
+/* ABOUT background: a deeper plum with soft pink and violet glows, so the
+   section stands apart from the plain Desktop tools section above it */
+.about-sec{
+  background:
+    radial-gradient(ellipse at 12% 8%, rgba(255,111,174,.16) 0%, transparent 42%),
+    radial-gradient(ellipse at 88% 62%, rgba(150,90,220,.24) 0%, transparent 48%),
+    linear-gradient(180deg, #1C1030 0%, #241339 55%, #1C1030 100%);
+  border-top:1px solid rgba(201,184,245,.12); border-bottom:1px solid rgba(201,184,245,.12);
+  margin-top:90px;
+}
+.about-sec .orbit-wrap{ margin-top:120px; }
+@media (max-width:760px){ .about-sec .orbit-wrap{ margin-top:80px; } }
+/* lighter, see-through cards and tiles so they read on the plum background */
+.about-sec .tl-card{ background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.1); }
+.about-sec .tl-item--now .tl-card{ background:linear-gradient(160deg, rgba(255,111,174,.16), rgba(255,255,255,.05)); }
+.about-sec .tl-dot{ background:#22123A; }
+
 /* SKILL LOGOS on the About ring: dark tiles with the coloured logo */
-.tile{ display:grid; place-items:center; background:var(--card); border:1px solid var(--line); }
+.tile{ display:grid; place-items:center; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); }
 .tile img{ width:52%; height:52%; object-fit:contain; }
 
 /* TIMELINE */
@@ -275,7 +292,7 @@ nav .nav-pill{
    The pink part of the line grows as you scroll (--tl-progress, 0..1,
    set by main.js) and each card fades in when it reaches the screen.
    ================================================================== */
-.tl-wrap{ max-width:980px; margin:110px auto 0; padding:0 28px; text-align:left; }
+.tl-wrap{ max-width:980px; margin:0 auto; padding:0 28px; text-align:left; }
 .tl-wrap > .desk-kicker{ display:block; text-align:center; }
 .tl-title{ margin-top:10px; text-align:center; font-size:clamp(30px,4.4vw,48px); line-height:1.05; color:var(--ink); }
 .tl{ position:relative; list-style:none; margin:56px 0 0; padding:0; --tl-progress:0; }
@@ -307,7 +324,7 @@ nav .nav-pill{
 .tl-item--now .tl-dot{ background:var(--accent); }
 
 @media (max-width:760px){
-  .tl-wrap{ margin-top:80px; padding:0 20px; }
+  .tl-wrap{ padding:0 20px; }
   .tl::before, .tl::after{ left:7px; }
   .tl-item, .tl-item:nth-child(even){ width:auto; margin-left:0; padding:0 0 30px 38px; }
   .tl-dot, .tl-item:nth-child(even) .tl-dot{ left:0; right:auto; }
@@ -331,8 +348,37 @@ nav .nav-pill{
   .contact-grid{ grid-template-columns:1fr; gap:32px; }
 }
 
-footer{ padding:50px 0; border-top:1px solid var(--line); text-align:center; }
-footer p{ font-size:13px; }
+/* FOOTER */
+.site-footer{ margin-top:20px; padding:56px 0 32px; border-top:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(150,90,220,.08), rgba(150,90,220,0) 70%); }
+.footer-top{ display:grid; grid-template-columns:1.4fr 1fr auto; gap:32px; align-items:center; }
+.footer-brand{ display:inline-flex; align-items:flex-start; gap:2px; }
+.footer-brand .brand-sign{ font-family:"Mrs Saint Delafield", cursive; font-size:52px; line-height:1; color:var(--ink); }
+.footer-brand .brand-star{ margin-top:6px; font-size:14px; color:var(--accent); text-shadow:0 0 8px rgba(255,111,174,.8);
+  animation:brand-twinkle 2.4s ease-in-out infinite; }
+.footer-id p{ margin-top:6px; font-size:14px; }
+.footer-links{ display:flex; flex-wrap:wrap; gap:8px 22px; justify-content:center; font-size:14px; }
+.footer-links a{ color:var(--ink-soft); transition:color .2s ease; }
+.footer-links a:hover{ color:var(--ink); }
+.footer-social{ display:flex; gap:10px; }
+.footer-social a{ display:grid; place-items:center; width:42px; height:42px; border-radius:50%;
+  border:1px solid var(--line); color:var(--ink-soft); transition:color .2s ease, border-color .2s ease, transform .2s ease; }
+.footer-social a:hover{ color:var(--accent); border-color:var(--accent-soft); transform:translateY(-2px); }
+.footer-icon{ width:18px; height:18px; }
+.footer-bottom{ margin-top:40px; padding-top:22px; border-top:1px solid var(--line);
+  display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; }
+.footer-bottom p{ font-size:13px; }
+.footer-up{ font-size:13px; color:var(--ink-soft); }
+.footer-up:hover{ color:var(--accent); }
+@media (max-width:760px){
+  .footer-top{ grid-template-columns:1fr; text-align:center; justify-items:center; gap:22px; }
+  .footer-bottom{ flex-direction:column; align-items:center; text-align:center; }
+}
+@media (prefers-reduced-motion:reduce){ .footer-brand .brand-star{ animation:none; } }
+
+/* project pages: "Work" shown as the current section in the nav */
+nav .links a.is-current{ color:#FFFFFF; background:linear-gradient(135deg, var(--accent), var(--accent-deep));
+  box-shadow:0 4px 16px rgba(255,111,174,.45); }
 
 /* HERO */
 /* ==================================================================
