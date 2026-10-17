@@ -29,18 +29,6 @@
     ring.appendChild(slot);
   }
 
-  /* ---- build the vertical auto-scroll strip (Technique C) ---- */
-  var track = document.getElementById('vTrack');
-  var vShots = ['images/learnora.jpg', 'images/aum-stocks.jpg', 'images/matchback.jpg']; // covers of the live projects
-  for (var loop = 0; loop < 2; loop++){ // duplicate set = seamless loop
-    vShots.forEach(function(src){
-      var t = document.createElement('div');
-      t.className = 'vtile';
-      t.style.background = 'url("' + src + '") top center / cover no-repeat';
-      track.appendChild(t);
-    });
-  }
-
   /* ---- fade the pinned hero text as the cards scroll up over it (Technique A) ---- */
   var worksSection = document.querySelector('.works');
   var pinHeading = document.querySelector('.pin-heading');
