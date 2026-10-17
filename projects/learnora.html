@@ -26,8 +26,8 @@
       </div>
     </nav>
 
-    <!-- CASE STUDY. Boxes with a dashed pink outline (.cs-todo) are still to be
-         written: replace each one with your own paragraph. -->
+    <!-- CASE STUDY: why, who, what, my part, challenges, lessons, stack.
+         A dashed pink box (class="cs-todo") marks text that still needs writing. -->
     <main class="cs-page">
       <a class="cs-back" href="../index.html#work">&larr; All projects</a>
 
@@ -56,7 +56,7 @@
           </div>
           <div class="cs-fact">
             <span>Timeline</span>
-            <strong><span class="cs-todo-inline">TODO: when?</span></strong>
+            <strong>Jul 2026</strong>
           </div>
           <div class="cs-fact">
             <span>Stack</span>
@@ -66,12 +66,16 @@
 
       <section class="cs-section">
         <h2>Why I built it</h2>
-        <p class="cs-todo">TODO: Why did you build Learnora? What problem or idea started it, and was it a course assignment or your own idea?</p>
+        <p>
+          I wanted one project that I built from start to finish on my own and that covers everything a real product needs: a database, an API, a web app, sign-in, payments, file uploads and an admin area. An online course marketplace needs all of them at once, with real money and real files moving through it, so every shortcut shows.
+        </p>
       </section>
 
       <section class="cs-section">
         <h2>Who it is for</h2>
-        <p class="cs-todo">TODO: Who is it for? What do instructors and learners get from it?</p>
+        <p>
+          Two groups use it. Instructors get a place to publish video courses, set their own price and receive 70% of each sale. Learners get practical courses they can pay for with the methods people use in Thailand, such as cards, PromptPay and TrueMoney, and study at their own pace, picking up where they left off. Admins keep the marketplace fair by reviewing courses, handling refunds and recording payouts.
+        </p>
       </section>
 
       <section class="cs-section">
@@ -103,7 +107,9 @@
 
       <section class="cs-section">
         <h2>What I learned</h2>
-        <p class="cs-todo">TODO: What did you learn from this project, or what would you do differently next time?</p>
+        <p>
+          Most of the work in a real product is outside the happy path: a payment that is only confirmed later by a webhook, a session that has to be revoked on every device, a free server that is asleep when the first user arrives. I learned to design for those cases from the start, and to check the limits of each platform, like request sizes and cookies in Server Components, before building on top of it.
+        </p>
       </section>
 
       <section class="cs-section">
