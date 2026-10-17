@@ -1,10 +1,16 @@
 (function(){
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var palette = ['#F7B6D2','#C9B8F5','#FF6FAE','#8E6BD8','#FBD3E4','#5B3A8C','#E9A4E0','#B79BF0','#D9327E','#F3C6F0','#7A4FB8','#FF9CC8','#A486E8','#E8C9FF'];
+  // tech logos on the About ring (files in images/skills/, from Simple Icons, CC0)
+  var skills = [
+    ['typescript', 'TypeScript'], ['javascript', 'JavaScript'], ['react', 'React'],
+    ['nextdotjs', 'Next.js'], ['nodedotjs', 'Node.js'], ['nestjs', 'NestJS'],
+    ['postgresql', 'PostgreSQL'], ['prisma', 'Prisma'], ['tailwindcss', 'Tailwind CSS'],
+    ['git', 'Git'], ['github', 'GitHub'], ['dotnet', '.NET'], ['stripe', 'Stripe'], ['claude', 'Claude Code']
+  ];
 
   /* ---- build the orbit ring (Technique B) ---- */
   var ring = document.getElementById('ring');
-  var count = 14, radius = 220;
+  var count = skills.length, radius = 220;
   for (var i = 0; i < count; i++){
     var angle = (360 / count) * i;
     var slot = document.createElement('div');
@@ -13,7 +19,12 @@
     slot.style.transform = 'rotate(' + angle + 'deg) translate(var(--orbit-r, ' + radius + 'px)) rotate(' + (-angle) + 'deg)';
     var tile = document.createElement('div');
     tile.className = 'tile';
-    tile.style.background = palette[i % palette.length];
+    var skill = skills[i % skills.length];
+    tile.title = skill[1];
+    var logo = document.createElement('img');
+    logo.src = 'images/skills/' + skill[0] + '.svg';
+    logo.alt = skill[1];
+    tile.appendChild(logo);
     slot.appendChild(tile);
     ring.appendChild(slot);
   }
@@ -117,5 +128,41 @@
       window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       history.replaceState(null, '', location.pathname + location.search); // no "#top" left in the URL
     });
+  }
+  /* ---- TIMELINE (About): items appear as you scroll, and the line fills up ---- */
+  var timeline = document.querySelector('.tl');
+  if (timeline){
+    var items = Array.prototype.slice.call(timeline.querySelectorAll('.tl-item'));
+    if (reduceMotion || !('IntersectionObserver' in window)){
+      items.forEach(function(el){ el.classList.add('is-visible'); });
+      timeline.style.setProperty('--tl-progress', 1);
+    } else {
+      // each item fades in once, when a fifth of it is on screen
+      var showItem = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting){
+            entry.target.classList.add('is-visible');
+            showItem.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      items.forEach(function(el){ showItem.observe(el); });
+
+      // the pink line grows from the top of the timeline down to the middle
+      // of the screen, so it always "points" at what you are reading
+      var fillLine = function(){
+        var box = timeline.getBoundingClientRect();
+        var progress = (window.innerHeight * 0.6 - box.top) / box.height;
+        timeline.style.setProperty('--tl-progress', Math.min(Math.max(progress, 0), 1).toFixed(3));
+      };
+      var lineTicking = false;
+      window.addEventListener('scroll', function(){
+        if (lineTicking) return;
+        lineTicking = true;
+        requestAnimationFrame(function(){ fillLine(); lineTicking = false; });
+      }, { passive: true });
+      window.addEventListener('resize', fillLine);
+      fillLine();
+    }
   }
 })();
