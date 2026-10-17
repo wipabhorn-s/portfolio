@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AumStocks — Wipabhorn Saeyang</title>
+    <meta name="description" content="A back-office stock system for retail shops and minimarts, with one central catalogue shared across branches." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <!-- "scrolled" keeps the nav visible on phones (on the home page main.js adds it) -->
+  <body class="scrolled">
+    <nav>
+      <a class="brand" href="../index.html" aria-label="Praew, home">
+        <span class="brand-sign">Praew</span>
+        <span class="brand-star" aria-hidden="true">&#10022;</span>
+      </a>
+      <div class="links">
+        <a href="../index.html#work">Work</a><a href="../index.html#about">About</a
+        ><a href="../index.html#contact">Contact</a>
+      </div>
+    </nav>
+
+    <!-- CASE STUDY. Boxes with a dashed pink outline (.cs-todo) are still to be
+         written: replace each one with your own paragraph. -->
+    <main class="cs-page">
+      <a class="cs-back" href="../index.html#work">&larr; All projects</a>
+
+      <header class="cs-head">
+        <span class="rc-tag">Group project · Team of 5</span>
+        <h1>AumStocks</h1>
+        <p class="cs-summary">A back-office stock system for retail shops and minimarts, with one central catalogue shared across branches.</p>
+        <div class="cs-actions">
+          <a class="btn-pill" href="https://aum-manage-stock.vercel.app/" target="_blank" rel="noopener">Visit live site &#8599;</a>
+          <a class="btn-pill-outline" href="https://github.com/wipabhorn-s/aum-manage-stocks" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </header>
+
+      <div class="cs-cover" style="background: linear-gradient(135deg, #F5A623, #FBE6C2)">
+        <img src="../images/aum-stocks.jpg" alt="AumStocks home page: retail shop stock management" />
+      </div>
+
+      <div class="cs-facts">
+          <div class="cs-fact">
+            <span>My role</span>
+            <strong>Requirements, team guide, auth, payments, admin</strong>
+          </div>
+          <div class="cs-fact">
+            <span>Team</span>
+            <strong>5 developers</strong>
+          </div>
+          <div class="cs-fact">
+            <span>Timeline</span>
+            <strong>Aug – Sep 2026</strong>
+          </div>
+          <div class="cs-fact">
+            <span>Stack</span>
+            <strong>Next.js · NestJS · PostgreSQL</strong>
+          </div>
+      </div>
+
+      <section class="cs-section">
+        <h2>Why I built it</h2>
+        <p class="cs-todo">TODO: Why did the team build AumStocks? Was it a course project, a real shop, or your own idea? What problem do small shops have with stock?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Who it is for</h2>
+        <p class="cs-todo">TODO: Who is it for? A shop owner with several branches and their staff? What changes for them when they use it?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>What it does</h2>
+        <ul class="cs-list">
+          <li>A central product catalogue that each shop chooses what to sell from, with stock-in and a full stock history.</li>
+          <li>A point-of-sale screen that deducts stock by scanning barcodes.</li>
+          <li>Free, Plus and Pro plans paid by card through Stripe.</li>
+          <li>Staff accounts with permissions per shop, and an admin area for the whole system.</li>
+          <li>A chatbot that adjusts stock from a text message, on the web and in LINE, plus AI suggestions.</li>
+        </ul>
+      </section>
+
+      <section class="cs-section">
+        <h2>My part</h2>
+        <ul class="cs-list">
+          <li>Gathered the requirements and wrote the team guide (AGENTS.md) that every developer and AI agent followed.</li>
+          <li>Sign-in and accounts: JWT, 2FA on every sign-in method, email verification, forgotten and reset passwords, Google and LINE login and account linking, changing email.</li>
+          <li>Payments: Stripe card payments inside the site, prorated upgrades, cancelling pending payments and payment history.</li>
+          <li>The admin area: managing users and shops, creating admin accounts and an audit log.</li>
+          <li>Team foundations: CI, the shadcn theme, the auth and payments database schema, and the switch to Brevo for email.</li>
+        </ul>
+      </section>
+
+      <section class="cs-section">
+        <h2>Challenges and decisions</h2>
+        <div class="cs-challenge">
+          <h3>The server could not send email</h3>
+          <p>The API host blocks outgoing SMTP, so verification and reset emails never left the server. I replaced SMTP with Brevo's HTTP API, which goes out over normal web traffic.</p>
+        </div>
+        <div class="cs-challenge">
+          <h3>Removed staff could keep working</h3>
+          <p>A JWT is only signed data, so a deleted staff member could keep using the system until their token expired. Now every request checks the account in the database, access tokens last 15 minutes, and sessions continue through refresh tokens.</p>
+        </div>
+      </section>
+
+      <section class="cs-section">
+        <h2>What I learned</h2>
+        <p class="cs-todo">TODO: What did you learn from this project, or what would you do differently next time?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Built with</h2>
+        <dl class="cs-stack">
+          <div><dt>Frontend</dt><dd>Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, shadcn/ui, TanStack Query, react-hook-form + zod</dd></div>
+          <div><dt>Backend</dt><dd>NestJS 11, Prisma 7, Socket.io, scheduled jobs</dd></div>
+          <div><dt>Database</dt><dd>PostgreSQL</dd></div>
+          <div><dt>Auth</dt><dd>JWT access and refresh tokens, bcrypt, TOTP 2FA, Google and LINE login</dd></div>
+          <div><dt>Services</dt><dd>Stripe, LINE Messaging API, Claude API, Cloudinary, Brevo, OpenStreetMap</dd></div>
+          <div><dt>Hosting</dt><dd>Vercel (web)</dd></div>
+        </dl>
+      </section>
+
+      <div class="cs-next">
+        <a href="learnora.html">&larr; Learnora</a>
+        <a href="matchback.html">MATCHBACK &rarr;</a>
+      </div>
+    </main>
+  </body>
+</html>

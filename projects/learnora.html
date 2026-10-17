@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Learnora — Wipabhorn Saeyang</title>
+    <meta name="description" content="An online course marketplace where instructors sell video courses and learners buy and study them in the browser." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <!-- "scrolled" keeps the nav visible on phones (on the home page main.js adds it) -->
+  <body class="scrolled">
+    <nav>
+      <a class="brand" href="../index.html" aria-label="Praew, home">
+        <span class="brand-sign">Praew</span>
+        <span class="brand-star" aria-hidden="true">&#10022;</span>
+      </a>
+      <div class="links">
+        <a href="../index.html#work">Work</a><a href="../index.html#about">About</a
+        ><a href="../index.html#contact">Contact</a>
+      </div>
+    </nav>
+
+    <!-- CASE STUDY. Boxes with a dashed pink outline (.cs-todo) are still to be
+         written: replace each one with your own paragraph. -->
+    <main class="cs-page">
+      <a class="cs-back" href="../index.html#work">&larr; All projects</a>
+
+      <header class="cs-head">
+        <span class="rc-tag">Solo project · E-learning marketplace</span>
+        <h1>Learnora</h1>
+        <p class="cs-summary">An online course marketplace where instructors sell video courses and learners buy and study them in the browser.</p>
+        <div class="cs-actions">
+          <a class="btn-pill" href="https://learnora-th.vercel.app/" target="_blank" rel="noopener">Visit live site &#8599;</a>
+          <a class="btn-pill-outline" href="https://github.com/wipabhorn-s/learnora" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </header>
+
+      <div class="cs-cover" style="background: linear-gradient(135deg, #5B2A9C, #E879C9)">
+        <img src="../images/learnora.jpg" alt="Learnora home page: Learn new skills, at your own pace" />
+      </div>
+
+      <div class="cs-facts">
+          <div class="cs-fact">
+            <span>Role</span>
+            <strong>Everything: design, frontend, backend, deployment</strong>
+          </div>
+          <div class="cs-fact">
+            <span>Team</span>
+            <strong>Solo</strong>
+          </div>
+          <div class="cs-fact">
+            <span>Timeline</span>
+            <strong><span class="cs-todo-inline">TODO: when?</span></strong>
+          </div>
+          <div class="cs-fact">
+            <span>Stack</span>
+            <strong>Next.js · NestJS · PostgreSQL</strong>
+          </div>
+      </div>
+
+      <section class="cs-section">
+        <h2>Why I built it</h2>
+        <p class="cs-todo">TODO: Why did you build Learnora? What problem or idea started it, and was it a course assignment or your own idea?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Who it is for</h2>
+        <p class="cs-todo">TODO: Who is it for? What do instructors and learners get from it?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>What it does</h2>
+        <ul class="cs-list">
+          <li>Checkout through Opn Payments with cards (including 3-D Secure), PromptPay QR, TrueMoney and mobile banking, confirmed by webhooks. It runs in test mode, so no real money moves.</li>
+          <li>Instructors create courses and upload videos straight from the browser to Cloudinary with a progress bar; lessons play through signed links that expire.</li>
+          <li>A complete account system: sign-up with email verification, Google sign-in, 2FA, sign out of every device, and a lock after too many wrong passwords.</li>
+          <li>An admin area for users and courses, per-course refund approval, and records of the 70% instructor payouts.</li>
+          <li>Course search and filters, a wishlist, a cart and learning progress.</li>
+        </ul>
+      </section>
+
+      <section class="cs-section">
+        <h2>Challenges and decisions</h2>
+        <div class="cs-challenge">
+          <h3>100 MB videos on a host that accepts 4.5 MB requests</h3>
+          <p>Vercel rejects large request bodies, so videos never pass through my server. The API signs an upload permission, the browser sends the file straight to Cloudinary, and when the lesson is saved the API asks Cloudinary itself whether the file exists, belongs to that instructor, is within the size limit and is not already used by another lesson.</p>
+        </div>
+        <div class="cs-challenge">
+          <h3>Refreshing login tokens with Server Components</h3>
+          <p>Next.js Server Components cannot write cookies, so expired access tokens could not be refreshed while a page rendered. I moved the refresh into the proxy (middleware) that runs before the page, rotated refresh tokens with reuse detection, and added a session version so every session can be revoked at once.</p>
+        </div>
+        <div class="cs-challenge">
+          <h3>A free server that falls asleep</h3>
+          <p>The free API host sleeps when idle, which made the first login fail. The web app now waits and retries the API for up to 60 seconds instead of showing an error.</p>
+        </div>
+      </section>
+
+      <section class="cs-section">
+        <h2>What I learned</h2>
+        <p class="cs-todo">TODO: What did you learn from this project, or what would you do differently next time?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Built with</h2>
+        <dl class="cs-stack">
+          <div><dt>Frontend</dt><dd>Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Base UI, React Hook Form + Zod</dd></div>
+          <div><dt>Backend</dt><dd>NestJS 11, Prisma 7</dd></div>
+          <div><dt>Database</dt><dd>PostgreSQL on Neon</dd></div>
+          <div><dt>Auth</dt><dd>NextAuth v5, JWT with rotating refresh tokens, email verification, 2FA, bcrypt</dd></div>
+          <div><dt>Services</dt><dd>Opn Payments, Cloudinary, Brevo email, Google Sign-In</dd></div>
+          <div><dt>Hosting</dt><dd>Vercel (web), Render (API), Neon (database)</dd></div>
+          <div><dt>Testing</dt><dd>Vitest (web), Jest (API)</dd></div>
+        </dl>
+      </section>
+
+      <div class="cs-next">
+        <a href="matchback.html">&larr; MATCHBACK</a>
+        <a href="aumstocks.html">AumStocks &rarr;</a>
+      </div>
+    </main>
+  </body>
+</html>

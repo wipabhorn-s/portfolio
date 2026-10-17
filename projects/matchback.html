@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MATCHBACK — Wipabhorn Saeyang</title>
+    <meta name="description" content="A two-sided &quot;Tinder for jobs&quot;: candidates swipe on jobs, recruiters swipe on candidates, and it is a match only when both sides like each other." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <!-- "scrolled" keeps the nav visible on phones (on the home page main.js adds it) -->
+  <body class="scrolled">
+    <nav>
+      <a class="brand" href="../index.html" aria-label="Praew, home">
+        <span class="brand-sign">Praew</span>
+        <span class="brand-star" aria-hidden="true">&#10022;</span>
+      </a>
+      <div class="links">
+        <a href="../index.html#work">Work</a><a href="../index.html#about">About</a
+        ><a href="../index.html#contact">Contact</a>
+      </div>
+    </nav>
+
+    <!-- CASE STUDY. Boxes with a dashed pink outline (.cs-todo) are still to be
+         written: replace each one with your own paragraph. -->
+    <main class="cs-page">
+      <a class="cs-back" href="../index.html#work">&larr; All projects</a>
+
+      <header class="cs-head">
+        <span class="rc-tag">Hackathon · U-Hackathon 2026 AI Track · Team of 4</span>
+        <h1>MATCHBACK</h1>
+        <p class="cs-summary">A two-sided "Tinder for jobs": candidates swipe on jobs, recruiters swipe on candidates, and it is a match only when both sides like each other.</p>
+        <div class="cs-actions">
+          <a class="btn-pill" href="https://matchback-web-taupe.vercel.app/" target="_blank" rel="noopener">Visit live site &#8599;</a>
+          <a class="btn-pill-outline" href="https://github.com/Aum40/matchback" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </header>
+
+      <div class="cs-cover" style="background: linear-gradient(135deg, #1F9D55, #D9F2B4)">
+        <img src="../images/matchback.jpg" alt="MATCHBACK home page: Swipe smart. Apply with confidence." />
+      </div>
+
+      <div class="cs-facts">
+          <div class="cs-fact">
+            <span>My role</span>
+            <strong>Project setup, database and match API, AI bot, deployment</strong>
+          </div>
+          <div class="cs-fact">
+            <span>Team</span>
+            <strong>4 developers</strong>
+          </div>
+          <div class="cs-fact">
+            <span>Timeline</span>
+            <strong>15 – 16 Oct 2026</strong>
+          </div>
+          <div class="cs-fact">
+            <span>Stack</span>
+            <strong>Next.js · NestJS · Gemini</strong>
+          </div>
+      </div>
+
+      <section class="cs-section">
+        <h2>Why I built it</h2>
+        <p class="cs-todo">TODO: What was the hackathon brief, and why did your team choose job matching? What is wrong with how people look for jobs today?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Who it is for</h2>
+        <p class="cs-todo">TODO: Who is it for? Job seekers who send many applications? Recruiters? And how did it do in the hackathon?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>What it does</h2>
+        <ul class="cs-list">
+          <li>A swipe deck of jobs for candidates, with mouse dragging, touch swiping, buttons and keyboard controls.</li>
+          <li>A 0–100 fit score for every job, listing matched skills, real gaps and things the profile simply does not say yet.</li>
+          <li>An AI explanation of the score and a Resume Coach that suggests changes based only on what the candidate has actually done.</li>
+          <li>A recruiter side: a company profile, job management and a candidate deck for one job at a time.</li>
+          <li>Mutual matches: a candidate's name and email are revealed only after both sides like each other.</li>
+          <li>MATCHBACK Bot, a career assistant for candidates.</li>
+        </ul>
+      </section>
+
+      <section class="cs-section">
+        <h2>My part</h2>
+        <ul class="cs-list">
+          <li>Set up the project and wrote the plan that split the work between four developers working in parallel.</li>
+          <li>Built the two-sided database schema, the recruiter and company endpoints and the mutual-match API.</li>
+          <li>Switched the AI service to Google Gemini and built MATCHBACK Bot, with a fallback when the AI is unavailable.</li>
+          <li>Seeded the demo data and set up the deployment.</li>
+        </ul>
+      </section>
+
+      <section class="cs-section">
+        <h2>Challenges and decisions</h2>
+        <div class="cs-challenge">
+          <h3>Keeping the score honest</h3>
+          <p>The fit score is calculated by fixed rules, so the same profile always gets the same score and every point can be explained. The AI only explains the score and gives advice; it never calculates or changes it.</p>
+        </div>
+        <div class="cs-challenge">
+          <h3>When the AI is down</h3>
+          <p>Every AI feature has a rule-based fallback, so explanations, the Resume Coach and the bot still answer if the Gemini API fails or runs out of quota during the demo.</p>
+        </div>
+        <div class="cs-challenge">
+          <h3>Four people, two days</h3>
+          <p>Each file had exactly one owner and the API contract was written down first, so four developers (and their AI coding agents) could build in parallel without overwriting each other's work.</p>
+        </div>
+      </section>
+
+      <section class="cs-section">
+        <h2>What I learned</h2>
+        <p class="cs-todo">TODO: What did you learn from this project, or what would you do differently next time?</p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Built with</h2>
+        <dl class="cs-stack">
+          <div><dt>Frontend</dt><dd>Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, shadcn/Base UI</dd></div>
+          <div><dt>Backend</dt><dd>NestJS 11, Prisma 7, REST</dd></div>
+          <div><dt>Database</dt><dd>PostgreSQL</dd></div>
+          <div><dt>AI</dt><dd>Google Gemini API behind the server, with rule-based fallbacks</dd></div>
+          <div><dt>Hosting</dt><dd>Vercel (web), Render (API)</dd></div>
+        </dl>
+      </section>
+
+      <div class="cs-next">
+        <a href="aumstocks.html">&larr; AumStocks</a>
+        <a href="learnora.html">Learnora &rarr;</a>
+      </div>
+    </main>
+  </body>
+</html>
