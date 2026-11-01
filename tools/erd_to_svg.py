@@ -3,8 +3,9 @@
 Usage:
     python tools/erd_to_svg.py "path/to/ERD.drawio" images/erd/learnora.svg
 
-Keeps the table positions and the relationship lines from draw.io, and adds
-data attributes that erd-viewer.js uses to highlight a table's links.
+Keeps the table columns and relationship lines from draw.io, adds a safe gap
+between tables after their real heights are known, and adds data attributes
+that erd-viewer.js uses to highlight a table's links.
 Run it again whenever the .drawio file changes.
 """
 import html
@@ -28,6 +29,9 @@ HEAD_H = 30
 FONT = 12.5
 CHAR_W = FONT * 0.6  # monospace
 KEY_W = 46
+TABLE_GAP = 48.0
+COLUMN_GAP = 96.0
+CARD_RX = 18.0
 
 
 def esc(s):
@@ -107,14 +111,59 @@ def main(src, dst):
             key = clean(parts[0].get("value")) if parts else ""
             text = " ".join(clean(p.get("value")) for p in parts[1:])
             cols.append((r.get("id"), key, text))
-        # rows are redrawn at a fixed height, so the table keeps its top-left
-        # corner and gets a tidy, even height
+        # Rows are redrawn at a fixed height, so every card height fits its
+        # actual number of columns while the column width stays aligned.
         th = HEAD_H + ROW_H * len(cols)
-        for i, (rid, _, _) in enumerate(cols):
-            ry = ty + HEAD_H + i * ROW_H
-            row_info[rid] = (name, (tx, ry, tw, ROW_H))
-        row_info[t.get("id")] = (name, (tx, ty, tw, HEAD_H))
-        tables.append({"name": name, "x": tx, "y": ty, "w": tw, "h": th, "cols": cols})
+        tables.append({"id": t.get("id"), "name": name, "x": tx, "y": ty,
+                       "w": tw, "h": th, "cols": cols})
+
+    # Draw.io positions are based on its original row heights. The SVG uses a
+    # fixed, readable row height, so stack tables in each source column again
+    # after calculating their real heights. This prevents a tall table from
+    # covering the table below it while preserving the original column order.
+    columns = defaultdict(list)
+    for table in tables:
+        columns[round(table["x"], 1)].append(table)
+    previous_right = None
+    for column_x in sorted(columns):
+        column = columns[column_x]
+        column.sort(key=lambda table: table["y"])
+
+        column_width = max(table["w"] for table in column)
+        for table in column:
+            table["w"] = column_width
+
+        # Preserve the source layout where possible, but move a column right
+        # when its cards would touch the previous column. This makes the
+        # renderer safe for future draw.io files with tighter coordinates.
+        if previous_right is not None:
+            safe_x = previous_right + COLUMN_GAP
+            for table in column:
+                table["x"] = max(table["x"], safe_x)
+
+        bottom = None
+        for table in column:
+            if bottom is not None:
+                table["y"] = max(table["y"], bottom + TABLE_GAP)
+            bottom = table["y"] + table["h"]
+        previous_right = max(table["x"] + table["w"] for table in column)
+
+    # Fail early if a future source layout still produces a collision. The
+    # viewer cannot repair overlapping SVG cards after the edges are routed.
+    for i, left in enumerate(tables):
+        for right in tables[i + 1:]:
+            if (left["x"] < right["x"] + right["w"] and
+                    left["x"] + left["w"] > right["x"] and
+                    left["y"] < right["y"] + right["h"] and
+                    left["y"] + left["h"] > right["y"]):
+                raise ValueError(f'overlapping tables: {left["name"]} and {right["name"]}')
+
+    row_info.clear()
+    for table in tables:
+        for i, (rid, _, _) in enumerate(table["cols"]):
+            ry = table["y"] + HEAD_H + i * ROW_H
+            row_info[rid] = (table["name"], (table["x"], ry, table["w"], ROW_H))
+        row_info[table["id"]] = (table["name"], (table["x"], table["y"], table["w"], HEAD_H))
 
     # the original rows may have had other heights; waypoints were drawn
     # against those, so map each original row centre y to the new one
@@ -165,7 +214,7 @@ def main(src, dst):
     for e in edges:
         xs += [p[0] for p in e["pts"]]
         ys += [p[1] for p in e["pts"]]
-    pad = 60
+    pad = 100
     minx, miny = min(xs) - pad, min(ys) - pad
     W, H = max(xs) - minx + pad, max(ys) - miny + pad
 
@@ -203,12 +252,14 @@ def main(src, dst):
         out.append(f'<g class="erd-table" data-t="{esc(t["name"])}" tabindex="0">')
         out.append(f'<title>{esc(t["name"])} ({len(t["cols"])} columns)</title>')
         out.append(
-            f'<rect class="erd-body" x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="12" '
-            f'fill="{CARD}" stroke="{LINE}" stroke-width="1.5"/>'
+            f'<rect class="erd-body" x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
+            f'rx="{CARD_RX:.0f}" ry="{CARD_RX:.0f}" fill="{CARD}" stroke="{LINE}" stroke-width="1.5" '
+            'stroke-linejoin="round"/>'
         )
         out.append(
-            f'<path d="M{x:.1f},{y + HEAD_H:.1f} V{y + 12:.1f} a12,12 0 0 1 12,-12 H{x + w - 12:.1f} '
-            f'a12,12 0 0 1 12,12 V{y + HEAD_H:.1f} Z" fill="url(#erdHead)"/>'
+            f'<path d="M{x:.1f},{y + HEAD_H:.1f} V{y + CARD_RX:.1f} a{CARD_RX:.0f},{CARD_RX:.0f} 0 0 1 {CARD_RX:.0f},-{CARD_RX:.0f} '
+            f'H{x + w - CARD_RX:.1f} a{CARD_RX:.0f},{CARD_RX:.0f} 0 0 1 {CARD_RX:.0f},{CARD_RX:.0f} V{y + HEAD_H:.1f} Z" '
+            'fill="url(#erdHead)"/>'
         )
         out.append(
             f'<text x="{x + 16:.1f}" y="{y + HEAD_H / 2 + 5:.1f}" fill="#FFFFFF" font-size="14.5" '

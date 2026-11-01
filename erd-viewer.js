@@ -30,13 +30,36 @@
       <button type="button" data-z="out" aria-label="Zoom out" title="Zoom out">${icon('minus')}</button>
       <button type="button" data-z="fit" aria-label="Show everything" title="Show everything">${icon('fit')}</button>
     </div>
-    <p class="erd-hint">Scroll to zoom &middot; hold and drag to move &middot; click a table</p>`);
+    <p class="erd-hint">Find a table to zoom in &middot; drag to move &middot; click to see relations</p>
+    <div class="erd-finder">
+      <label for="erd-find-table">Find a table</label>
+      <input id="erd-find-table" type="search" placeholder="Search table name…" autocomplete="off" spellcheck="false" aria-controls="erd-find-results" aria-expanded="false" />
+      <div class="erd-find-results" id="erd-find-results" hidden></div>
+    </div>
+    <aside class="erd-details" aria-labelledby="erd-details-title" hidden>
+      <div class="erd-details-head">
+        <div>
+          <p class="erd-details-label">TABLE DETAILS</p>
+          <h2 id="erd-details-title"></h2>
+          <p class="erd-details-count"></p>
+        </div>
+        <button class="erd-details-close" type="button" aria-label="Close table details">&times;</button>
+      </div>
+      <div class="erd-details-list"></div>
+    </aside>`);
 
   const stage = root.querySelector('.erd-stage');
   const canvas = root.querySelector('.erd-canvas');
   const zoomLabel = root.querySelector('.erd-zoom');
   const hint = root.querySelector('.erd-hint');
-  if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'Pinch to zoom &middot; drag to move &middot; tap a table';
+  const details = root.querySelector('.erd-details');
+  const detailsTitle = root.querySelector('#erd-details-title');
+  const detailsCount = root.querySelector('.erd-details-count');
+  const detailsList = root.querySelector('.erd-details-list');
+  const finder = root.querySelector('.erd-finder');
+  const findInput = root.querySelector('#erd-find-table');
+  const findResults = root.querySelector('#erd-find-results');
+  if (matchMedia('(pointer: coarse)').matches) hint.innerHTML = 'Find a table to zoom in &middot; drag to move &middot; tap to see relations';
 
   let svg = null, W = 0, H = 0;
   const MIN = 0.06, MAX = 2.4;
@@ -100,18 +123,124 @@
       t.classList.toggle('on', !!name && lit.has(t.dataset.t));
       t.classList.toggle('picked', t.dataset.t === name);
     });
+    if (!name) {
+      details.hidden = true;
+      detailsList.replaceChildren();
+      return;
+    }
+    const table = [...svg.querySelectorAll('.erd-table')].find((t) => t.dataset.t === name);
+    if (!table) return;
+    const rows = [...table.querySelectorAll(':scope > .erd-col')];
+    detailsTitle.textContent = name;
+    detailsCount.textContent = `${rows.length} columns · full values`;
+    detailsList.replaceChildren(...rows.map((row) => {
+      const item = document.createElement('div');
+      item.className = 'erd-details-row';
+      const heading = document.createElement('div');
+      heading.className = 'erd-details-row-head';
+      const column = document.createElement('strong');
+      column.textContent = row.dataset.n || '—';
+      if (row.dataset.k) {
+        const key = document.createElement('span');
+        key.className = 'erd-details-key';
+        key.textContent = row.dataset.k;
+        heading.append(key);
+      }
+      heading.append(column);
+      const type = document.createElement('p');
+      type.textContent = row.dataset.ty || '—';
+      item.append(heading, type);
+      return item;
+    }));
+    detailsList.scrollTop = 0;
+    details.hidden = false;
+  }
+
+  function focusTable(name) {
+    const table = [...svg.querySelectorAll('.erd-table')].find((t) => t.dataset.t === name);
+    if (!table) return;
+    select(name);
+    const body = table.querySelector('rect.erd-body');
+    const box = body ? body.getBBox() : table.getBBox();
+    const panelWidth = matchMedia('(max-width:820px)').matches ? 0 : details.getBoundingClientRect().width + 32;
+    const visibleWidth = Math.max(200, stage.clientWidth - panelWidth);
+    const s = clamp(Math.min(1.15, (visibleWidth - 40) / box.width, (stage.clientHeight - 80) / box.height));
+    const view = svg.viewBox.baseVal;
+    goal.s = s;
+    const introClearance = matchMedia('(max-width:820px)').matches ? 0 : Math.min(160, visibleWidth * .15);
+    goal.x = visibleWidth / 2 + introClearance - (box.x + box.width / 2 - view.x) * s;
+    const visibleHeight = matchMedia('(max-width:820px)').matches ? stage.clientHeight * .52 : stage.clientHeight;
+    goal.y = visibleHeight / 2 - (box.y + box.height / 2 - view.y) * s;
+    animate();
+    firstTouch();
+  }
+
+  function closeResults() {
+    findResults.hidden = true;
+    findInput.setAttribute('aria-expanded', 'false');
+    root.classList.remove('searching');
+  }
+  function showResults() {
+    if (!svg) return;
+    const q = findInput.value.trim().toLowerCase();
+    const names = [...svg.querySelectorAll('.erd-table')].map((t) => t.dataset.t);
+    const matches = names.filter((name) => name.toLowerCase().includes(q));
+    findResults.replaceChildren();
+    if (!matches.length) {
+      const empty = document.createElement('p');
+      empty.textContent = 'No tables found';
+      findResults.append(empty);
+    } else {
+      matches.forEach((name) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = name;
+        button.addEventListener('click', () => {
+          findInput.value = name;
+          closeResults();
+          focusTable(name);
+        });
+        findResults.append(button);
+      });
+    }
+    findResults.hidden = false;
+    findInput.setAttribute('aria-expanded', 'true');
+    root.classList.add('searching');
+  }
+  findInput.addEventListener('focus', showResults);
+  findInput.addEventListener('input', showResults);
+  findInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { closeResults(); findInput.blur(); e.stopPropagation(); }
+    if (e.key === 'Enter') {
+      const first = findResults.querySelector('button');
+      if (first) { e.preventDefault(); first.click(); findInput.blur(); }
+    }
+  });
+  document.addEventListener('pointerdown', (e) => { if (!finder.contains(e.target)) closeResults(); });
+
+  function mountSvg(text) {
+      canvas.innerHTML = text;
+      svg = canvas.querySelector('svg');
+      if (!svg) throw new Error('ERD SVG is missing');
+      W = svg.width.baseVal.value; H = svg.height.baseVal.value;
+      fit(true);
+      if (document.activeElement === findInput) showResults();
   }
 
   // ---- load the diagram ----
   fetch(root.dataset.erd)
     .then((res) => { if (!res.ok) throw new Error(res.status); return res.text(); })
-    .then((text) => {
-      canvas.innerHTML = text;
-      svg = canvas.querySelector('svg');
-      W = svg.width.baseVal.value; H = svg.height.baseVal.value;
-      fit(true);
-    })
+    .then(mountSvg)
     .catch(() => {
+      // Direct file:// pages cannot fetch a sibling SVG in some browsers.
+      // The page embeds a template for that case so the diagram stays
+      // interactive instead of degrading to a non-clickable image.
+      const inlineTemplate = root.querySelector('.erd-inline-template');
+      const inline = inlineTemplate && inlineTemplate.content.querySelector('svg');
+      if (inline) {
+        mountSvg(inline.outerHTML);
+        return;
+      }
       canvas.innerHTML = `<img src="${root.dataset.erd}" alt="Entity relationship diagram" class="erd-img">`;
       const img = canvas.querySelector('img');
       img.decode().catch(() => {}).then(() => { W = img.naturalWidth || 2000; H = img.naturalHeight || 1500; fit(true); });
@@ -129,9 +258,11 @@
   // ---- hold the wheel or left button and drag to move; two fingers to pinch ----
   const pts = new Map();
   let moved = false, pinch = 0, button = 0;
+
   // stop the browser's own "auto-scroll" circle when the wheel is pressed
   stage.addEventListener('mousedown', (e) => { if (e.button === 1) e.preventDefault(); });
   stage.addEventListener('auxclick', (e) => { if (e.button === 1) e.preventDefault(); });
+  stage.addEventListener('dragstart', (e) => e.preventDefault());
   stage.addEventListener('pointerdown', (e) => {
     if (e.button !== 0 && e.button !== 1) return; // left button or wheel
     if (e.button === 1) e.preventDefault();
@@ -190,6 +321,10 @@
       else { select(null); fit(); }
     })
   );
+  details.querySelector('.erd-details-close').addEventListener('click', () => select(null));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !details.hidden) select(null);
+  });
   let lastSize = '';
   new ResizeObserver(() => {
     const size = stage.clientWidth + 'x' + stage.clientHeight;
