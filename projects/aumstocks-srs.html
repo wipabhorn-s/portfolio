@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AumStocks SRS — Wipabhorn Saeyang</title>
+    <meta name="description" content="Software Requirements Specification for Aum Manage Stocks, a back-office stock system for retail shops: roles, business rules, plans, functional requirements, data model and tech stack." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body class="scrolled">
+    <nav>
+      <a class="brand" href="../index.html" aria-label="Praew, home">
+        <span class="brand-sign">Praew</span>
+        <span class="brand-star" aria-hidden="true">&#10022;</span>
+      </a>
+      <div class="links">
+        <a class="active is-current" href="../index.html#work" aria-current="page">Work</a><a href="../index.html#about">About</a
+        ><a href="../links.html">Contact</a>
+      </div>
+    </nav>
+
+    <!-- SRS: an English, web version of the requirements document.
+         The original (Thai) is docs/AumStocks-SRS.pdf, exported from Google Docs.
+         Requirements are numbered automatically by the CSS (1.1, 1.2 ...). -->
+    <main class="cs-page srs-page">
+      <div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="../index.html#work">Work</a></li><li><a href="aumstocks.html">AumStocks</a></li><li><span aria-current="page">SRS</span></li></ol></div>
+
+      <header class="cs-head">
+        <span class="rc-tag">Software Requirements Specification</span>
+        <h1>AumStocks SRS</h1>
+        <p class="cs-summary">
+          The requirements I gathered and wrote for Aum Manage Stocks, so a team of five could build one back-office stock system together.
+        </p>
+        <div class="cs-actions">
+          <a class="btn-pill" href="../docs/AumStocks-SRS.pdf" target="_blank" rel="noopener">Download SRS (PDF) <svg class="i i-down" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+          <a class="btn-pill-outline" href="aumstocks-erd.html">View ERD</a>
+        </div>
+        <p class="srs-note">The original document is written in Thai (PDF above). This page is an English version of the same content.</p>
+      </header>
+
+      <div class="cs-facts">
+        <div class="cs-fact"><span>Author</span><strong>Wipabhorn Saeyang</strong></div>
+        <div class="cs-fact"><span>Users</span><strong>5 roles</strong></div>
+        <div class="cs-fact"><span>Requirements</span><strong>122, in 14 groups</strong></div>
+        <div class="cs-fact"><span>Data model</span><strong>24 tables</strong></div>
+      </div>
+
+      <div class="srs-toc" role="navigation" aria-label="On this page">
+        <a href="#overview">Overview</a><a href="#users">Users</a><a href="#rules">Business rules</a><a href="#plans">Plans</a
+        ><a href="#features">Features</a><a href="#requirements">Requirements</a><a href="#data">Data model</a><a href="#stack">Tech stack</a>
+      </div>
+
+      <section class="cs-section" id="overview">
+        <h2>Background</h2>
+        <p>
+          Many small shops and minimarts still keep stock in a notebook or an Excel file. The numbers fall out of date, counts are often wrong, and the owner cannot see which products sell well and which sit on the shelf. Shops with several branches or with staff helping out need one central system where everyone works from the same data in real time. Aum Manage Stocks is an easy-to-use back-office platform for managing stock, with several ways to adjust it and AI that helps manage it.
+        </p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Objective</h2>
+        <p>
+          Design a back-office stock system for several roles (shop owners, staff and administrators) that can add and remove stock through several channels (manual, chatbot and barcode), with AI that analyses stock data and suggests ways to increase sales.
+        </p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Scope</h2>
+        <p>
+          A back-office web application for managing stock, not an online shop. Everyone starts on the Free plan: one shop and up to 100 active products. More shops, more products or the advanced features need the Plus or Pro plan. It works on desktop, tablet and mobile. The main capabilities are:
+        </p>
+        <ul class="cs-list">
+          <li>Sign-up and sign-in with email, username, Google or LINE, with email verification, account linking and two-factor authentication (2FA)</li>
+          <li>Profiles and passwords, with the shop owner managing them for staff</li>
+          <li>Free, Plus and Pro plans that limit shops, products, staff and advanced features, paid online by card</li>
+          <li>Shops: 1 on Free, 3 on Plus, 5 on Pro, each pinned on a map and able to pause</li>
+          <li>Staff accounts with permissions set per person and per shop</li>
+          <li>A central product catalogue: the same product can be sold in several shops and counts once toward the product quota</li>
+          <li>Manual stock adjustment with a cost per received lot, transfers between shops, and a history of every stock change</li>
+          <li>Adding, removing, selling and transferring stock through a chatbot on the web or in LINE, confirmed before it is saved</li>
+          <li>A point of sale (POS): pick products or scan barcodes with the camera, and void a bill</li>
+          <li>Dashboards per shop or across all shops, and AI suggestions for restocking and sales</li>
+          <li>In-app notifications: low stock, plan about to expire, quota reached</li>
+          <li>Administration of users, shops and the platform, with an audit log of admin actions</li>
+          <li>Thai and English interface</li>
+        </ul>
+      </section>
+
+      <section class="cs-section" id="users">
+        <h2>Users and roles</h2>
+        <p>
+          Four roles: Shop Owner, Shop Staff, Admin and Super Admin. Every account created from the website is a Shop Owner. Only a shop owner can create staff accounts, and only a Super Admin can create Admin accounts.
+        </p>
+        <div class="srs-roles">
+          <div class="srs-role">
+            <h3>Guest<small>Not signed in</small></h3>
+            <p>Sees the home page and can sign up or sign in. Cannot see any shop data before signing in.</p>
+          </div>
+          <div class="srs-role">
+            <h3>Shop Owner<small>Every website sign-up</small></h3>
+            <p>Creates and manages shops up to the plan's shop quota (Free 1, Plus 3, Pro 5) and assigns staff from one shared staff quota to any shop.</p>
+          </div>
+          <div class="srs-role">
+            <h3>Shop Staff<small>Created by a shop owner</small></h3>
+            <p>Can only do what the owner allows, per person and per shop: manage products, adjust stock, use the chatbot, sell (POS/barcode), view the dashboard and view AI suggestions. Starts with no permissions. Cannot manage shops or other staff.</p>
+          </div>
+          <div class="srs-role">
+            <h3>Admin<small>Created by a Super Admin</small></h3>
+            <p>Sees the platform overview and every user and shop, and suspends or reactivates them. Cannot suspend itself or another admin. Has no shop and cannot use shop features.</p>
+          </div>
+          <div class="srs-role">
+            <h3>Super Admin<small>Highest level</small></h3>
+            <p>Everything an Admin can do, plus creating Admin accounts, suspending them, and switching accounts between Admin and Super Admin. Cannot be suspended and cannot change its own role.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-section" id="rules">
+        <h2>Business rules</h2>
+        <p>The rules every part of the system has to follow, whichever team member builds it.</p>
+        <div class="srs-groups rules">
+          <details class="srs-group" open>
+            <summary>Accounts and sign-in</summary>
+            <ol>
+              <li>Every user has at least one of four ways to sign in (email, username, LINE or Google), but does not need all of them.</li>
+              <li>An account created with email always has a username, generated at sign-up.</li>
+              <li>An account created with LINE or Google has no username until the user sets one on the profile page.</li>
+              <li>Email sign-ups must verify the address before signing in with a password. Google sign-ups count as verified.</li>
+              <li>Signing in with a username only works once the account has a password.</li>
+              <li>LINE and Google sign-in never use the username; the user is identified by the LINE or Google ID.</li>
+              <li>A password has at least 8 characters, with at least one lowercase letter, uppercase letter, number and symbol.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Linking more sign-in methods</summary>
+            <ol>
+              <li>An owner who signed up with LINE can link Google later, and the other way round, without a new account.</li>
+              <li>Staff can link their own LINE (for example to use the chatbot in LINE), but only owners can link Google.</li>
+              <li>An owner can unlink a staff member's LINE without deleting the account, for example when they leave or lose their phone.</li>
+              <li>Linking Google to an account without an email saves the Google email to the account.</li>
+              <li>A Google or LINE account already used by another user cannot be linked.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Two-factor authentication</summary>
+            <ol>
+              <li>Optional TOTP 2FA with an authenticator app, for every role. Nobody is forced to turn it on.</li>
+              <li>Once on, the code is needed on every sign-in: email, username, LINE or Google.</li>
+              <li>Single-use recovery codes are shown once when 2FA is turned on and never shown or sent again. Losing both the device and the codes means contacting an admin, who turns 2FA off after checking identity outside the system.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Profiles and passwords</summary>
+            <ol>
+              <li>Only the owner edits profiles (name, surname, username), both their own and their staff's. Staff can only link or unlink their own LINE.</li>
+              <li>A new or changed username must be unique.</li>
+              <li>An owner with a password can change their email by confirming the current password; the new email applies only after the link sent to it is clicked. Staff cannot change their email.</li>
+              <li>Owners change their own password by entering the old one first.</li>
+              <li>Owners with no password (LINE or Google only) can set a first one without an old password.</li>
+              <li>Owners can always reset or change a staff member's password without knowing the old one.</li>
+              <li>Staff can never set or change their own password, even with LINE linked.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Plans and payment</summary>
+            <ol>
+              <li>All prices are per year.</li>
+              <li>Quotas only grow by upgrading the plan. There are no add-ons and no downgrades.</li>
+              <li>When a paid plan expires, all of that owner's shops become read-only until renewal. Free never expires.</li>
+              <li>Payment history is append-only: it is never edited or deleted.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Shops, staff and products</summary>
+            <ol>
+              <li>Every shop has exactly one owner and any number of staff.</li>
+              <li>Only the owner adds, edits or deletes shops.</li>
+              <li>An owner can pause a shop: no stock changes or sales while paused. This is different from an admin suspension, which the owner cannot lift.</li>
+              <li>Only the owner creates, edits or deletes staff accounts. A staff account always has a username and a password.</li>
+              <li>Staff permissions are set per person and per shop, one by one. There are no default permissions.</li>
+              <li>Every staff action must pass both the permission the owner gave and the owner's plan.</li>
+              <li>Products, shops and staff assignments are soft-deleted, so sales and stock history are never lost.</li>
+              <li>A barcode is unique within one owner's catalogue, but different owners may use the same barcode.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Records that never change</summary>
+            <ol>
+              <li>Stock history is append-only. A mistake is fixed by adding a new entry, never by editing or deleting an old one.</li>
+              <li>A bill keeps the product name, price and cost at the time of sale, so later price changes never alter old bills.</li>
+              <li>The admin audit log is append-only.</li>
+              <li>Chatbot access follows the sign-in methods linked to the account now, not the one used at sign-up: with LINE linked it works in LINE and on the web, otherwise only on the web.</li>
+            </ol>
+          </details>
+        </div>
+      </section>
+
+      <section class="cs-section" id="plans">
+        <h2>Plans</h2>
+        <p>Quotas are fixed per plan. Upgrading is the only way to get more.</p>
+        <div class="srs-table-wrap">
+          <table class="srs-table">
+            <thead>
+              <tr><th>Plan</th><th>Price / year</th><th>Shops</th><th>Active products</th><th>Staff</th><th>Barcode POS</th><th>Chatbot</th><th>AI suggestions</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Free</td><td>฿0</td><td>1</td><td>100</td><td>0</td><td class="srs-no">&mdash;</td><td class="srs-no">&mdash;</td><td class="srs-no">&mdash;</td></tr>
+              <tr><td>Plus</td><td>฿2,499</td><td>3</td><td>3,000</td><td>6</td><td class="srs-yes">&#10003;</td><td class="srs-yes">&#10003;</td><td class="srs-no">&mdash;</td></tr>
+              <tr><td>Pro</td><td>฿3,499</td><td>5</td><td>5,000</td><td>10</td><td class="srs-yes">&#10003;</td><td class="srs-yes">&#10003;</td><td class="srs-yes">&#10003;</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="srs-note">Free can still sell by picking products by hand and sees a basic sales dashboard. Plus and Pro add advanced reports.</p>
+      </section>
+
+      <section class="cs-section" id="features">
+        <h2>System features</h2>
+        <ul class="cs-list">
+          <li><strong>Sign-up and sign-in:</strong> email and password (with email verification), username, Google and LINE; methods can be linked later, and 2FA is optional.</li>
+          <li><strong>Profiles and passwords:</strong> owners edit their profile, email and password, and their staff's profiles and passwords. Staff cannot edit their own.</li>
+          <li><strong>Plans and payment:</strong> Free, Plus and Pro, paid by card on the website, with payment history and the option to cancel or retry a payment.</li>
+          <li><strong>Shops:</strong> create, edit (name, image, details, phone, address, map location), pause and delete, within the plan's quota.</li>
+          <li><strong>Staff and permissions:</strong> Plus and Pro owners create staff up to the staff quota, assign them to several shops and set permissions per shop.</li>
+          <li><strong>Products:</strong> add, edit and soft-delete products and categories, with barcode, unit and image, and a sell price, cost and low-stock point per shop.</li>
+          <li><strong>Stock and history:</strong> find a product by name or barcode, receive or reduce stock with the cost of each lot, transfer to another shop of the same owner, and record every change with its type, channel, user and cost.</li>
+          <li><strong>Chatbot stock changes:</strong> Plus and Pro type commands to add, reduce, sell or transfer stock on the web or in LINE, always reviewed before saving.</li>
+          <li><strong>Point of sale:</strong> pick products (every plan) or scan barcodes (Plus and Pro), confirm to cut stock automatically, and void bills.</li>
+          <li><strong>Dashboards, reports and AI:</strong> a basic sales summary on Free; best sellers, dead stock, sales trend, sales by category and an all-shop view on Plus and Pro; AI suggestions for restocking, clearance and promotions on Pro. The chatbot (Plus/Pro) and AI suggestions (Pro) are separate permissions.</li>
+          <li><strong>Notifications:</strong> low stock, plan about to expire, shop or product quota reached.</li>
+          <li><strong>Administration:</strong> platform overview, user and shop management, admin accounts (Super Admin), and an audit log of every admin action.</li>
+        </ul>
+      </section>
+
+      <section class="cs-section" id="requirements">
+        <h2>Functional requirements</h2>
+        <div class="srs-tools">
+          <button type="button" data-srs="open">Open all</button>
+          <button type="button" data-srs="close">Close all</button>
+        </div>
+        <div class="srs-groups">
+          <details class="srs-group" open>
+            <summary>Sign-up and sign-in <span class="srs-count">14</span></summary>
+            <ol>
+              <li>Users can sign up with email, Google or LINE.</li>
+              <li>The email sign-up form has first name, last name, email, password and password confirmation, all in one step.</li>
+              <li>An email sign-up gets a username made from the part of the email before the @, saved together with the password. If it is taken, random digits are added until it is unique.</li>
+              <li>A LINE or Google sign-up gets no username and no password; both stay empty until the user sets them.</li>
+              <li>A Google sign-up saves the Google email as the user's email straight away (LINE does not provide one).</li>
+              <li>Email sign-ups must verify through a link before signing in with a password, and can ask for a new link.</li>
+              <li>A password has at least 8 characters with a lowercase letter, uppercase letter, number and symbol.</li>
+              <li>Users can sign in with email, username, Google or LINE.</li>
+              <li>Signing in with a username is only allowed once the account has a password.</li>
+              <li>The system makes sure every account always keeps at least one way to sign in.</li>
+              <li>Users can sign in and sign out.</li>
+              <li>Short-lived access tokens (15 minutes) with refresh tokens keep users signed in; a suspended or deleted account is cut off on its next request.</li>
+              <li>The system validates the input, such as name, surname, email and password.</li>
+              <li>The system warns when information is missing or invalid.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Account linking <span class="srs-count">6</span></summary>
+            <ol>
+              <li>Owners who signed up with LINE can link Google from the profile page, and owners who signed up with Google can link LINE. Only owners can link Google.</li>
+              <li>Staff can link their own LINE (to use the chatbot in LINE, if allowed) but not Google. Linking LINE does not let staff change their password.</li>
+              <li>Users can unlink Google or LINE as long as at least one sign-in method remains.</li>
+              <li>Owners can unlink a staff member's LINE from the staff page without deleting the account; the chatbot in LINE stops working for them until they link again.</li>
+              <li>Linking Google to an account without an email saves the Google email automatically.</li>
+              <li>Linking a Google or LINE account already used by another user is refused with a message.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Two-factor authentication (2FA) <span class="srs-count">7</span></summary>
+            <ol>
+              <li>Every user can turn on TOTP 2FA from the profile page by scanning a QR code with an authenticator app.</li>
+              <li>A 6-digit code from the app confirms the setup before 2FA is turned on.</li>
+              <li>Recovery codes are shown when 2FA is turned on and never shown or sent again.</li>
+              <li>With 2FA on, a 6-digit code is needed after every sign-in with email, username, LINE or Google.</li>
+              <li>A recovery code can replace the 6-digit code, once per code.</li>
+              <li>Users can turn 2FA off from the profile page after confirming with a code or a recovery code.</li>
+              <li>A user who loses both the device and the recovery codes contacts an admin, who turns 2FA off after checking identity outside the system.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Profiles and passwords <span class="srs-count">10</span></summary>
+            <ol>
+              <li>Owners can edit the first name, last name and username of themselves and their staff.</li>
+              <li>Staff cannot edit their own profile in any case.</li>
+              <li>Owners without a username can set one later from the profile page.</li>
+              <li>A new username is checked for uniqueness before it is saved.</li>
+              <li>Owners with a password can change their email by confirming the current password; the new, unique email applies after its confirmation link is clicked. Staff cannot change their email.</li>
+              <li>Owners can change their password after entering the old one.</li>
+              <li>Owners without a password (LINE or Google only) can set a first password without an old one.</li>
+              <li>Owners who forget their password can reset it through a link sent to their email (accounts with an email only).</li>
+              <li>Owners can change or reset a staff member's password at once, without the old password or an email, entering the new password twice to avoid typos.</li>
+              <li>Staff cannot set or change their own password, the owner's, or another staff member's.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Plans and billing <span class="srs-count">15</span></summary>
+            <ol>
+              <li>New users start on the Free plan automatically: free, never expires, 1 shop and up to 100 active products.</li>
+              <li>Free has no staff accounts, barcode scanning, chatbot or advanced reports.</li>
+              <li>More shops, more products or advanced features need a paid plan, billed yearly (there is no monthly plan).</li>
+              <li>When an owner upgrades from Free, their existing shop counts toward the new plan's quota at once. More shops than the plan allows means upgrading again.</li>
+              <li>There are no downgrades and no extra quota for sale.</li>
+              <li>Users pay by card on the system's own page. Card details never pass through the system's servers, and the payment status is checked with the payment provider before the plan is granted.</li>
+              <li>Upgrading from Plus to Pro while Plus is still active costs only the difference (฿1,000) and keeps the expiry date. Buying from Free or after expiry costs the full price.</li>
+              <li>A plan can be renewed from 30 days before it expires; the new expiry is one year after the old one.</li>
+              <li>A pending payment lasts 24 hours and is then closed automatically. Meanwhile the user cannot start another one, but can cancel it or retry.</li>
+              <li>Users can see their whole payment history.</li>
+              <li>Owners see their subscription: current plan, expiry date (paid plans) and shops, products and staff used against the quota.</li>
+              <li>Owners get an in-app reminder 7 days before a paid plan expires.</li>
+              <li>When a paid plan expires, all the owner's shops become read-only: data can be viewed but nothing can be changed until renewal.</li>
+              <li>Free never expires and never becomes read-only.</li>
+              <li>After a successful renewal, read-only mode ends and every feature is back at once.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Shops <span class="srs-count">8</span></summary>
+            <ol>
+              <li>Owners create shops up to the plan's shop quota (1 on Free).</li>
+              <li>The remaining shop quota is checked before every new shop; when it is used up, the owner is asked to upgrade.</li>
+              <li>Owners can edit a shop's name, image, details, phone, address and map location.</li>
+              <li>Owners can pause and reopen a shop; no stock changes or sales while it is paused.</li>
+              <li>Owners can delete their own shops (soft delete).</li>
+              <li>Only the owner can create, edit, pause and delete shops.</li>
+              <li>A shop suspended by an admin cannot be used until an admin reactivates it; the owner cannot lift it.</li>
+              <li>Users see every shop they belong to, as owner or as staff.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Staff and permissions <span class="srs-count">11</span></summary>
+            <ol>
+              <li>Owners on Plus or Pro can create staff accounts: up to 6 on Plus and 10 on Pro.</li>
+              <li>The staff form has first name, last name, username, password and password confirmation.</li>
+              <li>Owners can edit or delete staff accounts.</li>
+              <li>Only the owner can create, edit and delete staff accounts.</li>
+              <li>Owners assign staff from one shared quota to any of their shops, in any split, and can remove staff from a shop.</li>
+              <li>The staff quota counts active staff accounts per owner: one person in several shops counts once, and the owner does not count.</li>
+              <li>Owners set six permissions per staff member and per shop: manage products, adjust stock manually, use the chatbot, sell (POS/barcode), view the dashboard and view AI suggestions.</li>
+              <li>A new staff account starts with no permissions.</li>
+              <li>Every action is checked against both the staff member's permissions and the owner's plan.</li>
+              <li>Owners can change permissions at any time; staff cannot change their own or anyone else's.</li>
+              <li>Free owners cannot create staff or set permissions.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Products <span class="srs-count">10</span></summary>
+            <ol>
+              <li>Owners, and staff with the product permission, can add, edit and delete products.</li>
+              <li>Deleting a product is a soft delete: hidden from lists, history kept.</li>
+              <li>The catalogue holds the product name, category, barcode, unit and image; each shop holds the sell price, cost, stock quantity, low-stock point and whether it is on sale there.</li>
+              <li>A product can be sold in several shops, each with its own price, cost, low-stock point and on/off switch.</li>
+              <li>Owners, and staff with the product permission, can create, edit and delete categories. Category names are unique per owner.</li>
+              <li>Barcodes are unique within one owner's catalogue.</li>
+              <li>Active products: up to 100 on Free, 3,000 on Plus and 5,000 on Pro. Soft-deleted products do not count.</li>
+              <li>When the quota is full, new products are blocked with a message suggesting an upgrade.</li>
+              <li>The current stock of each product is shown and updates straight after every change.</li>
+              <li>Each shop lists its products below their low-stock point.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Stock adjustment and history <span class="srs-count">10</span></summary>
+            <ol>
+              <li>Users can find a product by name or barcode before changing its stock.</li>
+              <li>Users enter the amount to add or remove, with a note.</li>
+              <li>Receiving stock can record the cost per unit of that lot; without it, the product's current cost is used. Stock is taken from the oldest lot first (FIFO), and the real cost of what was taken is recorded.</li>
+              <li>Users can transfer stock to another shop of the same owner, with stock permission in both shops.</li>
+              <li>Recently and frequently adjusted products are shown for quick access.</li>
+              <li>Free can only adjust stock by hand: no chatbot and no barcode scanning.</li>
+              <li>Every stock change, from any channel, is recorded with the quantity before and after.</li>
+              <li>The history shows the type (manual, chatbot, sale, voided sale), channel (web or LINE), user, quantity before and after, and cost per unit.</li>
+              <li>Users pick a shop and filter the history by date, product, user or type.</li>
+              <li>Stock history cannot be edited or deleted; corrections are new entries.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Chatbot stock changes (AI Chat) <span class="srs-count">11</span></summary>
+            <ol>
+              <li>The chatbot is for Plus and Pro only.</li>
+              <li>Access follows the methods linked now: with LINE linked it works on the web and in LINE, otherwise only on the web.</li>
+              <li>Users type a command (for example "เพิ่มโค้ก10", "add 10 Coke"). Four kinds are supported: add stock, reduce stock, sell, and transfer to another shop.</li>
+              <li>The system reads the message and shows a summary of what will be saved.</li>
+              <li>Users can change the amount before confirming.</li>
+              <li>Nothing is saved until the user confirms.</li>
+              <li>A command waiting for confirmation lasts 15 minutes (configurable) and is then cancelled automatically.</li>
+              <li>If a product name matches several products, the user picks the right one first.</li>
+              <li>An owner with several shops using LINE picks the shop first, and the bot remembers it until the command is done.</li>
+              <li>If the AI service is down, standard phrasings are still understood by fixed rules.</li>
+              <li>The user is told when a command cannot be understood or a product is not found, and given the real reason when a permission or the plan blocks it.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Point of sale (POS) <span class="srs-count">7</span></summary>
+            <ol>
+              <li>Users with the sell permission can pick products into the cart on every plan.</li>
+              <li>Scanning barcodes (QR and EAN-13) with the camera is for Plus and Pro only.</li>
+              <li>The items and total are shown before the sale is confirmed.</li>
+              <li>Confirming a sale cuts the stock automatically and issues a bill number.</li>
+              <li>The user is warned when there is not enough stock.</li>
+              <li>A bill keeps the product name, price and cost at the time of sale; later price changes never alter old bills.</li>
+              <li>Users can see past bills and void a bill with a reason; the stock is returned automatically.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Dashboards, reports and AI suggestions <span class="srs-count">5</span></summary>
+            <ol>
+              <li>Free owners see a basic sales dashboard for their one shop. Plus and Pro see the full dashboard per shop or across all shops. Staff see only the shops they are assigned to, with the dashboard permission.</li>
+              <li>Plus and Pro see best sellers, slow-moving stock, the sales trend and sales by category (advanced reports).</li>
+              <li>Pro users get AI suggestions, such as what to restock, what to clear and which promotions to run, after a plan check.</li>
+              <li>Suggestions are created when the user asks for new ones and stored (AI is not called on every page view), pushed at once to everyone viewing that shop, and can be dismissed.</li>
+              <li>AI suggestions are Pro only; the chatbot is Plus and Pro. They are separate permissions.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Notifications <span class="srs-count">2</span></summary>
+            <ol>
+              <li>In-app notifications when a product falls below its low-stock point, a plan expires in 7 days, or the product or shop quota is full.</li>
+              <li>Users can see their notifications and mark one or all as read.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Administration <span class="srs-count">6</span></summary>
+            <ol>
+              <li>Admins see a platform overview: users by role, shops, suspended accounts and shops, products and subscribers per plan.</li>
+              <li>Admins can list users (search, filter by role and status) and shops (search, filter by status and owner).</li>
+              <li>Admins can suspend or reactivate users and shops, with a reason.</li>
+              <li>Admins cannot suspend themselves or other admins, and nobody can suspend a Super Admin.</li>
+              <li>Super Admins can create Admin accounts, suspend or reactivate them, and switch accounts between Admin and Super Admin.</li>
+              <li>Every admin action is logged (who, what, target, reason, when) and the log cannot be edited or deleted.</li>
+            </ol>
+          </details>
+        </div>
+      </section>
+
+      <section class="cs-section" id="data">
+        <h2>Data model</h2>
+        <p>Twenty-four PostgreSQL tables, drawn as a diagram on its own page. Dashed lines are links stored as plain IDs without a database foreign key.</p>
+        <div class="cs-docs">
+          <a class="cs-doc" href="aumstocks-erd.html">
+            <span class="cs-doc-kicker">ERD</span>
+            <div class="cs-doc-thumb"><img src="../images/erd/aumstocks.svg" alt="" loading="lazy" /></div>
+            <h3>Entity relationship diagram</h3>
+            <p>24 tables: users and sign-in, shops and staff permissions, products, stock lots and movements, sales, plans and payments.</p>
+            <span class="cs-doc-go">Open the diagram <svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="cs-doc" href="../docs/AumStocks-SRS.pdf" target="_blank" rel="noopener">
+            <span class="cs-doc-kicker">PDF &middot; Thai</span>
+            <div class="cs-doc-pages" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <h3>Original SRS document</h3>
+            <p>The full document as I wrote it, exported from Google Docs.</p>
+            <span class="cs-doc-go">Download PDF <svg class="i i-down" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
+          </a>
+        </div>
+      </section>
+
+      <section class="cs-section" id="stack">
+        <h2>Tech stack</h2>
+        <dl class="cs-stack">
+          <div><dt>Frontend</dt><dd>Next.js 16 (App Router), TypeScript, React 19, Tailwind CSS 4, shadcn/ui + Base UI, lucide-react, TanStack Query</dd></div>
+          <div><dt>Forms</dt><dd>React Hook Form, Zod (in the forms and the API)</dd></div>
+          <div><dt>Backend</dt><dd>NestJS 11, TypeScript, Prisma ORM 7, PostgreSQL, Zod (nestjs-zod) and class-validator</dd></div>
+          <div><dt>Realtime</dt><dd>Socket.io (pushes AI suggestions to the screen)</dd></div>
+          <div><dt>AI</dt><dd>Ollama (reads chatbot commands and writes suggestions), with a rule-based parser when AI is unavailable</dd></div>
+          <div><dt>LINE</dt><dd>LINE Login (OAuth), LINE Messaging API (the chatbot in LINE)</dd></div>
+          <div><dt>Auth</dt><dd>JWT (15-minute access tokens + rotating refresh tokens), bcrypt, google-auth-library, TOTP 2FA with otplib</dd></div>
+          <div><dt>Security</dt><dd>AES-256-GCM for 2FA secrets, LINE webhook signature checks</dd></div>
+          <div><dt>Payments</dt><dd>Stripe (PaymentIntents + Payment Element, card)</dd></div>
+          <div><dt>Services</dt><dd>Brevo (email), Cloudinary (images), Leaflet + OpenStreetMap (shop locations), html5-qrcode (QR and EAN-13)</dd></div>
+          <div><dt>Jobs</dt><dd>@nestjs/schedule (plan expiry, 7-day reminders, closing pending payments)</dd></div>
+          <div><dt>Testing</dt><dd>Jest (API)</dd></div>
+          <div><dt>Hosting</dt><dd>Vercel (web), Railway (API + PostgreSQL)</dd></div>
+          <div><dt>Tools</dt><dd>pnpm 11, Node.js 24, ESLint + Prettier, Git + GitHub (GitHub Actions CI)</dd></div>
+        </dl>
+      </section>
+
+      <div class="cs-pager" role="navigation" aria-label="More pages">
+        <a class="cs-pager-link prev" href="aumstocks.html"><svg class="i i-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span><small>Back to the case study</small>AumStocks</span></a>
+        <a class="cs-pager-link next" href="learnora-srs.html"><span><small>Next SRS</small>Learnora</span><svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-id">
+            <a class="footer-brand" href="../index.html" aria-label="Praew, home">
+              <span class="brand-sign">Praew</span>
+              <span class="brand-star" aria-hidden="true">&#10022;</span>
+            </a>
+            <p>Analyst &amp; developer &middot; open to new roles</p>
+          </div>
+          <div class="footer-links">
+            <a href="../index.html#work">Work</a>
+            <a href="../index.html#about">About</a>
+            <a href="../links.html">Contact</a>
+          </div>
+          <div class="footer-social">
+            <a href="mailto:wipabhorn26@gmail.com" aria-label="Email"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <rect x="3" y="5" width="18" height="14" rx="2" /> <path d="M3 7l9 6 9-6" /> </svg></a>
+            <a href="https://www.linkedin.com/in/wipabhorn-s/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"> <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /> </svg></a>
+            <a href="https://github.com/wipabhorn-s" target="_blank" rel="noopener" aria-label="GitHub"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"> <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /> </svg></a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Wipabhorn Saeyang &middot; Built with HTML, CSS, JavaScript and Three.js</p>
+          <a class="footer-up" href="#">Back to top <svg class="i i-up" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // "Open all" / "Close all" for the requirement groups
+      document.querySelectorAll('[data-srs]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var open = b.dataset.srs === 'open';
+          b.closest('.cs-section').querySelectorAll('.srs-group').forEach(function (d) { d.open = open; });
+        });
+      });
+    </script>
+  </body>
+</html>

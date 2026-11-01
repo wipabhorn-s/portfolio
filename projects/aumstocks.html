@@ -22,22 +22,24 @@
       </a>
       <div class="links">
         <a class="active is-current" href="../index.html#work" aria-current="page">Work</a><a href="../index.html#about">About</a
-        ><a href="../index.html#contact">Contact</a>
+        ><a href="../links.html">Contact</a>
       </div>
     </nav>
 
     <!-- CASE STUDY: why, who, what, my part, challenges, lessons, stack.
          A dashed pink box (class="cs-todo") marks text that still needs writing. -->
     <main class="cs-page">
-      <a class="cs-back" href="../index.html#work">&larr; All projects</a>
+      <div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="../index.html#work">Work</a></li><li><span aria-current="page">AumStocks</span></li></ol></div>
 
       <header class="cs-head">
         <span class="rc-tag">Group project · Team of 5</span>
         <h1>AumStocks</h1>
-        <p class="cs-summary">A back-office stock system for retail shops and minimarts, with one central catalogue shared across branches.</p>
+        <p class="cs-summary">A back-office stock system for small retail shops: one owner runs several branches from one central catalogue, sells through a barcode POS and adjusts stock by typing Thai into a chatbot on the web or in LINE.</p>
         <div class="cs-actions">
-          <a class="btn-pill" href="https://aum-manage-stock.vercel.app/" target="_blank" rel="noopener">Visit live site &#8599;</a>
+          <a class="btn-pill" href="https://aum-manage-stock.vercel.app/" target="_blank" rel="noopener">Visit live site <svg class="i i-out" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           <a class="btn-pill-outline" href="https://github.com/wipabhorn-s/aum-manage-stocks" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn-pill-outline" href="aumstocks-srs.html">SRS</a>
+          <a class="btn-pill-outline" href="aumstocks-erd.html">ERD</a>
         </div>
       </header>
 
@@ -48,7 +50,7 @@
       <div class="cs-facts">
           <div class="cs-fact">
             <span>My role</span>
-            <strong>Requirements, team guide, auth, payments, admin</strong>
+            <strong>Requirements (SRS), team guide, auth, payments, admin</strong>
           </div>
           <div class="cs-fact">
             <span>Team</span>
@@ -65,43 +67,72 @@
       </div>
 
       <section class="cs-section">
-        <h2>Why I built it</h2>
+        <h2>Why we built it</h2>
         <p>
-          Small shops and minimarts often keep stock on paper or in a spreadsheet, and the numbers drift as soon as there is more than one branch or more than one person selling. We wanted one place where every change to stock is recorded, wherever it happens: on the web, at the till by scanning a barcode, or from a quick LINE message.
+          Small shops and minimarts often keep stock in a notebook or a spreadsheet, and the numbers drift as soon as there is more than one branch or more than one person selling. We wanted one place where every change to stock is recorded, wherever it happens: on the web, at the till by scanning a barcode, or from a quick LINE message.
         </p>
       </section>
 
       <section class="cs-section">
         <h2>Who it is for</h2>
         <p>
-          Shop owners who run one or more branches, and the staff who sell and receive stock for them. Owners see one catalogue and one stock history for every branch and decide what each staff member may do. Staff get a quick way to sell and update stock without learning a complicated system.
+          Shop owners who run one or more branches, and the staff who sell and receive stock for them. Owners keep one catalogue for every branch and decide, per person and per shop, what each staff member may do. Staff get a quick way to sell and update stock without learning a complicated system. Admins look after the whole platform.
         </p>
       </section>
 
       <section class="cs-section">
         <h2>What it does</h2>
         <ul class="cs-list">
-          <li>A central product catalogue that each shop chooses what to sell from, with stock-in and a full stock history.</li>
-          <li>A point-of-sale screen that deducts stock by scanning barcodes.</li>
-          <li>Free, Plus and Pro plans paid by card through Stripe.</li>
-          <li>Staff accounts with permissions per shop, and an admin area for the whole system.</li>
-          <li>A chatbot that adjusts stock from a text message, on the web and in LINE, plus AI suggestions.</li>
+          <li>A central product catalogue: a product is created once and listed in any shop, and each shop keeps its own price, stock and low-stock point.</li>
+          <li>Stock in, adjust and transfer between shops, with the cost of each received lot (the oldest lot is used first) and a stock history that is never edited.</li>
+          <li>A point-of-sale screen: pick products, or scan QR and EAN-13 barcodes with the camera on Plus and Pro. Bills keep the price and cost at the time of sale and can be voided with a reason.</li>
+          <li>A chatbot on the web and in LINE: type <q lang="th">เพิ่มโค้ก10</q> ("add 10 Coke"), an LLM (Ollama) reads it with a rule-based fallback, and the change is saved only after the user confirms.</li>
+          <li>AI restock, clearance and promotion suggestions on Pro, pushed live to everyone viewing that shop.</li>
+          <li>Free, Plus (&#3647;2,499 a year) and Pro (&#3647;3,499 a year) plans paid by card through Stripe. When a paid plan expires, the owner's shops become read-only until renewal.</li>
+          <li>Staff permissions per shop, dashboards, in-app notifications, an admin console with an audit log, and a Thai / English interface.</li>
         </ul>
       </section>
 
       <section class="cs-section">
         <h2>My part</h2>
         <ul class="cs-list">
-          <li>Gathered the requirements and wrote the team guide (AGENTS.md) that every developer and AI agent followed.</li>
-          <li>Sign-in and accounts: JWT, 2FA on every sign-in method, email verification, forgotten and reset passwords, Google and LINE login and account linking, changing email.</li>
-          <li>Payments: Stripe card payments inside the site, prorated upgrades, cancelling pending payments and payment history.</li>
+          <li>Gathered the requirements and wrote the SRS: five kinds of user, the business rules, the plan limits and 122 functional requirements. Then wrote the team guide (AGENTS.md) that every developer and AI agent followed.</li>
+          <li>Sign-in and accounts: JWT with refresh tokens, 2FA on every sign-in method, email verification, forgotten and reset passwords, Google and LINE login with account linking, and changing the email.</li>
+          <li>Payments: Stripe card payments on our own page, upgrades that charge only the difference, cancelling and retrying pending payments, and payment history.</li>
           <li>The admin area: managing users and shops, creating admin accounts and an audit log.</li>
-          <li>Team foundations: CI, the shadcn theme, the auth and payments database schema, and the switch to Brevo for email.</li>
+          <li>Team foundations: CI, the shared shadcn theme, the auth and payments database schema, and the switch to Brevo for email.</li>
         </ul>
       </section>
 
       <section class="cs-section">
+        <h2>Requirements and data model</h2>
+        <p>
+          The SRS was the contract between five developers: each person owned a set of modules, and the rules in it, like soft deletes, an append-only stock history and the two permission checks, kept the pieces consistent.
+        </p>
+        <div class="cs-docs">
+          <a class="cs-doc" href="aumstocks-srs.html">
+            <span class="cs-doc-kicker">SRS</span>
+            <div class="cs-doc-pages" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <h3>Software Requirements Specification</h3>
+            <p>Roles, business rules, plans and 122 numbered requirements, with the original document as a PDF.</p>
+            <span class="cs-doc-go">Read the SRS <svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="cs-doc" href="aumstocks-erd.html">
+            <span class="cs-doc-kicker">ERD</span>
+            <div class="cs-doc-thumb"><img src="../images/erd/aumstocks.svg" alt="" loading="lazy" /></div>
+            <h3>Entity relationship diagram</h3>
+            <p>24 tables: users and sign-in, shops and staff permissions, products, stock lots and movements, sales, plans and payments.</p>
+            <span class="cs-doc-go">Open the diagram <svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+        </div>
+      </section>
+
+      <section class="cs-section">
         <h2>Challenges and decisions</h2>
+        <div class="cs-challenge">
+          <h3>Two checks for every staff action</h3>
+          <p>A staff member's permissions are set per shop, and the owner's plan unlocks features on top of that. I wrote it as one rule in the SRS: every action must pass both the permission the owner gave and the owner's plan. With the rule written down, all five developers checked it the same way.</p>
+        </div>
         <div class="cs-challenge">
           <h3>The server could not send email</h3>
           <p>The API host blocks outgoing SMTP, so verification and reset emails never left the server. I replaced SMTP with Brevo's HTTP API, which goes out over normal web traffic.</p>
@@ -122,18 +153,26 @@
       <section class="cs-section">
         <h2>Built with</h2>
         <dl class="cs-stack">
-          <div><dt>Frontend</dt><dd>Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, shadcn/ui, TanStack Query, react-hook-form + zod</dd></div>
-          <div><dt>Backend</dt><dd>NestJS 11, Prisma 7, Socket.io, scheduled jobs</dd></div>
-          <div><dt>Database</dt><dd>PostgreSQL</dd></div>
-          <div><dt>Auth</dt><dd>JWT access and refresh tokens, bcrypt, TOTP 2FA, Google and LINE login</dd></div>
-          <div><dt>Services</dt><dd>Stripe, LINE Messaging API, Claude API, Cloudinary, Brevo, OpenStreetMap</dd></div>
-          <div><dt>Hosting</dt><dd>Vercel (web)</dd></div>
+          <div><dt>Frontend</dt><dd>Next.js 16 (App Router), TypeScript, React 19, Tailwind CSS 4, shadcn/ui + Base UI, lucide-react, TanStack Query</dd></div>
+          <div><dt>Forms</dt><dd>React Hook Form, Zod (in the forms and the API)</dd></div>
+          <div><dt>Backend</dt><dd>NestJS 11, TypeScript, Prisma ORM 7, PostgreSQL, Zod (nestjs-zod) and class-validator</dd></div>
+          <div><dt>Realtime</dt><dd>Socket.io (pushes AI suggestions to the screen)</dd></div>
+          <div><dt>AI</dt><dd>Ollama (reads chatbot commands and writes suggestions), with a rule-based parser when AI is unavailable</dd></div>
+          <div><dt>LINE</dt><dd>LINE Login (OAuth), LINE Messaging API (the chatbot in LINE)</dd></div>
+          <div><dt>Auth</dt><dd>JWT (15-minute access tokens + rotating refresh tokens), bcrypt, google-auth-library, TOTP 2FA with otplib</dd></div>
+          <div><dt>Security</dt><dd>AES-256-GCM for 2FA secrets, LINE webhook signature checks</dd></div>
+          <div><dt>Payments</dt><dd>Stripe (PaymentIntents + Payment Element, card)</dd></div>
+          <div><dt>Services</dt><dd>Brevo (email), Cloudinary (images), Leaflet + OpenStreetMap (shop locations), html5-qrcode (QR and EAN-13)</dd></div>
+          <div><dt>Jobs</dt><dd>@nestjs/schedule (plan expiry, 7-day reminders, closing pending payments)</dd></div>
+          <div><dt>Testing</dt><dd>Jest (API)</dd></div>
+          <div><dt>Hosting</dt><dd>Vercel (web), Railway (API + PostgreSQL)</dd></div>
+          <div><dt>Tools</dt><dd>pnpm 11, Node.js 24, ESLint + Prettier, Git + GitHub (GitHub Actions CI)</dd></div>
         </dl>
       </section>
 
-      <div class="cs-next">
-        <a href="learnora.html">&larr; Learnora</a>
-        <a href="matchback.html">MATCHBACK &rarr;</a>
+      <div class="cs-pager" role="navigation" aria-label="More pages">
+        <a class="cs-pager-link prev" href="learnora.html"><svg class="i i-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span><small>Previous project</small>Learnora</span></a>
+        <a class="cs-pager-link next" href="matchback.html"><span><small>Next project</small>MATCHBACK</span><svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
     </main>
 
@@ -145,13 +184,12 @@
               <span class="brand-sign">Praew</span>
               <span class="brand-star" aria-hidden="true">&#10022;</span>
             </a>
-            <p>Full-stack developer &middot; open to new roles</p>
+            <p>Analyst &amp; developer &middot; open to new roles</p>
           </div>
           <div class="footer-links">
             <a href="../index.html#work">Work</a>
             <a href="../index.html#about">About</a>
-            <a href="../index.html#contact">Contact</a>
-            <a href="../Wipabhorn_Saeyang_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute;</a>
+            <a href="../links.html">Contact</a>
           </div>
           <div class="footer-social">
             <a href="mailto:wipabhorn26@gmail.com" aria-label="Email"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <rect x="3" y="5" width="18" height="14" rx="2" /> <path d="M3 7l9 6 9-6" /> </svg></a>
@@ -161,7 +199,7 @@
         </div>
         <div class="footer-bottom">
           <p>&copy; 2026 Wipabhorn Saeyang &middot; Built with HTML, CSS, JavaScript and Three.js</p>
-          <a class="footer-up" href="#">Back to top &uarr;</a>
+          <a class="footer-up" href="#">Back to top <svg class="i i-up" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
         </div>
       </div>
     </footer>

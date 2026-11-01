@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AumStocks ERD — Wipabhorn Saeyang</title>
+    <meta name="description" content="Entity relationship diagram for AumStocks: 24 tables and how they relate." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <!-- ERD PAGE: works like a metro map. The diagram fills the screen under the
+       nav; the title card, search, zoom buttons and legend float on top.
+       The diagram is images/erd/aumstocks.svg, made from the draw.io file with
+       tools/erd_to_svg.py. erd-viewer.js does the rest. -->
+  <body class="scrolled erd-body">
+    <nav>
+      <a class="brand" href="../index.html" aria-label="Praew, home">
+        <span class="brand-sign">Praew</span>
+        <span class="brand-star" aria-hidden="true">&#10022;</span>
+      </a>
+      <div class="links">
+        <a class="active is-current" href="../index.html#work" aria-current="page">Work</a><a href="../index.html#about">About</a
+        ><a href="../links.html">Contact</a>
+      </div>
+    </nav>
+
+    <main class="erd-map" data-erd="../images/erd/aumstocks.svg">
+      <header class="erd-intro">
+        <div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="../index.html#work">Work</a></li><li><a href="aumstocks.html">AumStocks</a></li><li><span aria-current="page">ERD</span></li></ol></div>
+        <h1>AumStocks data model</h1>
+        <p>24 tables &middot; 44 relationships &middot; PostgreSQL</p>
+        <a class="erd-intro-link" href="aumstocks-srs.html">Read the SRS <svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </header>
+      <noscript><img src="../images/erd/aumstocks.svg" alt="AumStocks entity relationship diagram" style="width:100%" /></noscript>
+    </main>
+
+    <script src="../erd-viewer.js"></script>
+  </body>
+</html>

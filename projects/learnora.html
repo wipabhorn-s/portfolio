@@ -22,22 +22,24 @@
       </a>
       <div class="links">
         <a class="active is-current" href="../index.html#work" aria-current="page">Work</a><a href="../index.html#about">About</a
-        ><a href="../index.html#contact">Contact</a>
+        ><a href="../links.html">Contact</a>
       </div>
     </nav>
 
     <!-- CASE STUDY: why, who, what, my part, challenges, lessons, stack.
          A dashed pink box (class="cs-todo") marks text that still needs writing. -->
     <main class="cs-page">
-      <a class="cs-back" href="../index.html#work">&larr; All projects</a>
+      <div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="../index.html#work">Work</a></li><li><span aria-current="page">Learnora</span></li></ol></div>
 
       <header class="cs-head">
         <span class="rc-tag">Solo project · E-learning marketplace</span>
         <h1>Learnora</h1>
-        <p class="cs-summary">An online course marketplace where instructors sell video courses and learners buy and study them in the browser.</p>
+        <p class="cs-summary">An online course marketplace where instructors sell video courses, learners buy and study them in the browser, and admins run the platform.</p>
         <div class="cs-actions">
-          <a class="btn-pill" href="https://learnora-th.vercel.app/" target="_blank" rel="noopener">Visit live site &#8599;</a>
+          <a class="btn-pill" href="https://learnora-th.vercel.app/" target="_blank" rel="noopener">Visit live site <svg class="i i-out" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           <a class="btn-pill-outline" href="https://github.com/wipabhorn-s/learnora" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn-pill-outline" href="learnora-srs.html">SRS</a>
+          <a class="btn-pill-outline" href="learnora-erd.html">ERD</a>
         </div>
       </header>
 
@@ -48,7 +50,7 @@
       <div class="cs-facts">
           <div class="cs-fact">
             <span>Role</span>
-            <strong>Everything: design, frontend, backend, deployment</strong>
+            <strong>Everything: requirements, design, frontend, backend, deployment</strong>
           </div>
           <div class="cs-fact">
             <span>Team</span>
@@ -67,25 +69,50 @@
       <section class="cs-section">
         <h2>Why I built it</h2>
         <p>
-          I wanted one project that I built from start to finish on my own and that covers everything a real product needs: a database, an API, a web app, sign-in, payments, file uploads and an admin area. An online course marketplace needs all of them at once, with real money and real files moving through it, so every shortcut shows.
+          I wanted one project that I planned and built from start to finish on my own, covering everything a real product needs: requirements, a database, an API, a web app, sign-in, payments, file uploads and an admin area. An online course marketplace needs all of them at once, with real money and real files moving through it, so every shortcut shows.
         </p>
       </section>
 
       <section class="cs-section">
         <h2>Who it is for</h2>
         <p>
-          Two groups use it. Instructors get a place to publish video courses, set their own price and receive 70% of each sale. Learners get practical courses they can pay for with the methods people use in Thailand, such as cards, PromptPay and TrueMoney, and study at their own pace, picking up where they left off. Admins keep the marketplace fair by reviewing courses, handling refunds and recording payouts.
+          Learners search for practical courses, pay with the methods people use in Thailand (cards, PromptPay, TrueMoney and mobile banking) and study at their own pace, picking up each lesson where they left off. Instructors publish video courses, set the price and how long access lasts, and receive 70% of each sale. Admins keep the marketplace fair: they moderate courses, decide refund requests and record instructor payouts. Teaching is a capability rather than a separate role, so one account can learn and teach.
         </p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Requirements first</h2>
+        <p>
+          Before writing code I wrote a Software Requirements Specification: five kinds of user (guest, student, instructor, admin and super admin), 71 functional requirements in 14 groups, and a 16-table data model. It became the checklist I built and tested against.
+        </p>
+        <div class="cs-docs">
+          <a class="cs-doc" href="learnora-srs.html">
+            <span class="cs-doc-kicker">SRS</span>
+            <div class="cs-doc-pages" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <h3>Software Requirements Specification</h3>
+            <p>Roles, features and 71 numbered requirements, with the original document as a PDF.</p>
+            <span class="cs-doc-go">Read the SRS <svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="cs-doc" href="learnora-erd.html">
+            <span class="cs-doc-kicker">ERD</span>
+            <div class="cs-doc-thumb"><img src="../images/erd/learnora.svg" alt="" loading="lazy" /></div>
+            <h3>Entity relationship diagram</h3>
+            <p>16 tables: users, courses, lessons, purchases, refunds, payouts and the security tables.</p>
+            <span class="cs-doc-go">Open the diagram <svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+        </div>
       </section>
 
       <section class="cs-section">
         <h2>What it does</h2>
         <ul class="cs-list">
-          <li>Checkout through Opn Payments with cards (including 3-D Secure), PromptPay QR, TrueMoney and mobile banking, confirmed by webhooks. It runs in test mode, so no real money moves.</li>
-          <li>Instructors create courses and upload videos straight from the browser to Cloudinary with a progress bar; lessons play through signed links that expire.</li>
-          <li>A complete account system: sign-up with email verification, Google sign-in, 2FA, sign out of every device, and a lock after too many wrong passwords.</li>
-          <li>An admin area for users and courses, per-course refund approval, and records of the 70% instructor payouts.</li>
-          <li>Course search and filters, a wishlist, a cart and learning progress.</li>
+          <li>Checkout through Opn Payments with cards (including 3-D Secure), PromptPay QR, TrueMoney and mobile banking from five Thai banks. It runs in test mode, so no real money moves. Free courses are enrolled in one click.</li>
+          <li>Refund requests per course within 14 days, reviewed by an admin, who refunds only that course's price; the student is emailed either way.</li>
+          <li>Instructors create courses and upload videos of up to 100&nbsp;MB straight from the browser to Cloudinary with a progress bar. Lessons play through signed links that expire after 6 hours, so shared links stop working.</li>
+          <li>Instructor earnings: a 70% share that becomes available once the refund window closes, a payout bank account stored encrypted, and payouts that admins record and the instructor is emailed about.</li>
+          <li>A complete account system: email verification, Google sign-in, two-factor authentication with an email code, sign out of every device, a lock after too many wrong passwords, and account deletion.</li>
+          <li>Course search with filters, sorting and pagination, instructor profiles, a wishlist, a cart, and a player that tracks progress per lesson.</li>
+          <li>An admin console with a revenue chart, user management, course moderation, payments, a refund queue and payouts. Super admins manage the admin accounts.</li>
         </ul>
       </section>
 
@@ -93,41 +120,49 @@
         <h2>Challenges and decisions</h2>
         <div class="cs-challenge">
           <h3>100 MB videos on a host that accepts 4.5 MB requests</h3>
-          <p>Vercel rejects large request bodies, so videos never pass through my server. The API signs an upload permission, the browser sends the file straight to Cloudinary, and when the lesson is saved the API asks Cloudinary itself whether the file exists, belongs to that instructor, is within the size limit and is not already used by another lesson.</p>
+          <p>Vercel rejects large request bodies, so videos never pass through my server. The API signs a one-file upload ticket, the browser sends the file straight to Cloudinary, and when the lesson is saved the API asks Cloudinary itself whether the file exists, belongs to that instructor, is within the size limit, is a playable video and is not already used by another lesson.</p>
+        </div>
+        <div class="cs-challenge">
+          <h3>Payments that are confirmed later</h3>
+          <p>PromptPay, bank apps and 3-D Secure finish outside the site, and an old QR code can still be paid after a newer checkout. Each payment is settled from three places (the pending page, the Opn webhook and a background job), each one asks Opn for the real status, and every step is safe to repeat, so a course is never unlocked or refunded twice.</p>
         </div>
         <div class="cs-challenge">
           <h3>Refreshing login tokens with Server Components</h3>
-          <p>Next.js Server Components cannot write cookies, so expired access tokens could not be refreshed while a page rendered. I moved the refresh into the proxy (middleware) that runs before the page, rotated refresh tokens with reuse detection, and added a session version so every session can be revoked at once.</p>
+          <p>Next.js Server Components cannot write cookies, so expired access tokens could not be refreshed while a page rendered. I moved the refresh into the proxy that runs before the page, rotated refresh tokens with reuse detection, and added a session version so every session can be ended at once.</p>
         </div>
         <div class="cs-challenge">
           <h3>A free server that falls asleep</h3>
-          <p>The free API host sleeps when idle, which made the first login fail. The web app now waits and retries the API for up to 60 seconds instead of showing an error.</p>
+          <p>The free API host sleeps after 15 minutes without traffic, which made the first login fail. A free pinger now keeps it awake, and if it is asleep anyway the web app waits and retries for up to 60 seconds instead of showing an error, without ever resending a payment.</p>
         </div>
       </section>
 
       <section class="cs-section">
         <h2>What I learned</h2>
         <p>
-          Most of the work in a real product is outside the happy path: a payment that is only confirmed later by a webhook, a session that has to be revoked on every device, a free server that is asleep when the first user arrives. I learned to design for those cases from the start, and to check the limits of each platform, like request sizes and cookies in Server Components, before building on top of it.
+          Most of the work in a real product is outside the happy path: a payment that is only confirmed later, a session that has to be ended on every device, a free server that is asleep when the first user arrives. Writing the requirements first made those cases visible early, and I learned to check the limits of each platform, like request sizes and cookies in Server Components, before building on top of it.
         </p>
       </section>
 
       <section class="cs-section">
         <h2>Built with</h2>
         <dl class="cs-stack">
-          <div><dt>Frontend</dt><dd>Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Base UI, React Hook Form + Zod</dd></div>
-          <div><dt>Backend</dt><dd>NestJS 11, Prisma 7</dd></div>
-          <div><dt>Database</dt><dd>PostgreSQL on Neon</dd></div>
-          <div><dt>Auth</dt><dd>NextAuth v5, JWT with rotating refresh tokens, email verification, 2FA, bcrypt</dd></div>
-          <div><dt>Services</dt><dd>Opn Payments, Cloudinary, Brevo email, Google Sign-In</dd></div>
-          <div><dt>Hosting</dt><dd>Vercel (web), Render (API), Neon (database)</dd></div>
-          <div><dt>Testing</dt><dd>Vitest (web), Jest (API)</dd></div>
+          <div><dt>Frontend</dt><dd>Next.js 16 (App Router, Server Actions), TypeScript, React 19, Tailwind CSS 4, shadcn/ui + Base UI, lucide-react</dd></div>
+          <div><dt>Forms</dt><dd>React Hook Form, Zod (shared by the forms and the server actions)</dd></div>
+          <div><dt>Backend</dt><dd>NestJS 11, TypeScript, Prisma ORM 7, PostgreSQL, class-validator / class-transformer</dd></div>
+          <div><dt>Auth</dt><dd>NextAuth v5 (Credentials + Google), JWT with rotating refresh tokens, bcrypt, google-auth-library, 2FA with 6-digit email codes</dd></div>
+          <div><dt>Security</dt><dd>Helmet, @nestjs/throttler (rate limits per IP), AES-256-GCM for instructors' bank account numbers</dd></div>
+          <div><dt>Payments</dt><dd>Opn Payments / Omise (card, PromptPay, TrueMoney Wallet, mobile banking), Omise.js card tokens in the browser</dd></div>
+          <div><dt>Files</dt><dd>Cloudinary (avatars, course thumbnails, lesson videos with signed URLs), react-easy-crop</dd></div>
+          <div><dt>Email</dt><dd>Brevo transactional email API</dd></div>
+          <div><dt>Testing</dt><dd>Jest + Supertest (API), Vitest + Testing Library (web)</dd></div>
+          <div><dt>Hosting</dt><dd>Vercel (web, Singapore), Render (API, Singapore), Neon (PostgreSQL)</dd></div>
+          <div><dt>Tools</dt><dd>pnpm 11 (Corepack), ESLint + Prettier, Git + GitHub</dd></div>
         </dl>
       </section>
 
-      <div class="cs-next">
-        <a href="matchback.html">&larr; MATCHBACK</a>
-        <a href="aumstocks.html">AumStocks &rarr;</a>
+      <div class="cs-pager" role="navigation" aria-label="More pages">
+        <a class="cs-pager-link prev" href="matchback.html"><svg class="i i-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span><small>Previous project</small>MATCHBACK</span></a>
+        <a class="cs-pager-link next" href="aumstocks.html"><span><small>Next project</small>AumStocks</span><svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
     </main>
 
@@ -139,13 +174,12 @@
               <span class="brand-sign">Praew</span>
               <span class="brand-star" aria-hidden="true">&#10022;</span>
             </a>
-            <p>Full-stack developer &middot; open to new roles</p>
+            <p>Analyst &amp; developer &middot; open to new roles</p>
           </div>
           <div class="footer-links">
             <a href="../index.html#work">Work</a>
             <a href="../index.html#about">About</a>
-            <a href="../index.html#contact">Contact</a>
-            <a href="../Wipabhorn_Saeyang_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute;</a>
+            <a href="../links.html">Contact</a>
           </div>
           <div class="footer-social">
             <a href="mailto:wipabhorn26@gmail.com" aria-label="Email"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <rect x="3" y="5" width="18" height="14" rx="2" /> <path d="M3 7l9 6 9-6" /> </svg></a>
@@ -155,7 +189,7 @@
         </div>
         <div class="footer-bottom">
           <p>&copy; 2026 Wipabhorn Saeyang &middot; Built with HTML, CSS, JavaScript and Three.js</p>
-          <a class="footer-up" href="#">Back to top &uarr;</a>
+          <a class="footer-up" href="#">Back to top <svg class="i i-up" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
         </div>
       </div>
     </footer>

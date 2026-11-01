@@ -22,21 +22,21 @@
       </a>
       <div class="links">
         <a class="active is-current" href="../index.html#work" aria-current="page">Work</a><a href="../index.html#about">About</a
-        ><a href="../index.html#contact">Contact</a>
+        ><a href="../links.html">Contact</a>
       </div>
     </nav>
 
     <!-- CASE STUDY: why, who, what, my part, challenges, lessons, stack.
          A dashed pink box (class="cs-todo") marks text that still needs writing. -->
     <main class="cs-page">
-      <a class="cs-back" href="../index.html#work">&larr; All projects</a>
+      <div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="../index.html#work">Work</a></li><li><span aria-current="page">MATCHBACK</span></li></ol></div>
 
       <header class="cs-head">
         <span class="rc-tag">Hackathon · U-Hackathon 2026 AI Track · Team of 4</span>
         <h1>MATCHBACK</h1>
         <p class="cs-summary">A two-sided "Tinder for jobs": candidates swipe on jobs, recruiters swipe on candidates, and it is a match only when both sides like each other.</p>
         <div class="cs-actions">
-          <a class="btn-pill" href="https://matchback-web-taupe.vercel.app/" target="_blank" rel="noopener">Visit live site &#8599;</a>
+          <a class="btn-pill" href="https://matchback-web-taupe.vercel.app/" target="_blank" rel="noopener">Visit live site <svg class="i i-out" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
           <a class="btn-pill-outline" href="https://github.com/Aum40/matchback" target="_blank" rel="noopener">GitHub</a>
         </div>
       </header>
@@ -48,7 +48,7 @@
       <div class="cs-facts">
           <div class="cs-fact">
             <span>My role</span>
-            <strong>Project setup, database and match API, AI bot, deployment</strong>
+            <strong>Project setup, database and match API, AI bot, deployment guide</strong>
           </div>
           <div class="cs-fact">
             <span>Team</span>
@@ -96,7 +96,7 @@
           <li>Set up the project and wrote the plan that split the work between four developers working in parallel.</li>
           <li>Built the two-sided database schema, the recruiter and company endpoints and the mutual-match API.</li>
           <li>Switched the AI service to Google Gemini and built MATCHBACK Bot, with a fallback when the AI is unavailable.</li>
-          <li>Seeded the demo data and set up the deployment.</li>
+          <li>Seeded the demo data and wrote the deployment config and guide; a teammate deployed it on Railway and Vercel.</li>
         </ul>
       </section>
 
@@ -130,13 +130,13 @@
           <div><dt>Backend</dt><dd>NestJS 11, Prisma 7, REST</dd></div>
           <div><dt>Database</dt><dd>PostgreSQL</dd></div>
           <div><dt>AI</dt><dd>Google Gemini API behind the server, with rule-based fallbacks</dd></div>
-          <div><dt>Hosting</dt><dd>Vercel (web), Render (API)</dd></div>
+          <div><dt>Hosting</dt><dd>Vercel (web), Railway (API and PostgreSQL)</dd></div>
         </dl>
       </section>
 
-      <div class="cs-next">
-        <a href="aumstocks.html">&larr; AumStocks</a>
-        <a href="learnora.html">Learnora &rarr;</a>
+      <div class="cs-pager" role="navigation" aria-label="More pages">
+        <a class="cs-pager-link prev" href="aumstocks.html"><svg class="i i-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span><small>Previous project</small>AumStocks</span></a>
+        <a class="cs-pager-link next" href="learnora.html"><span><small>Next project</small>Learnora</span><svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
     </main>
 
@@ -148,13 +148,12 @@
               <span class="brand-sign">Praew</span>
               <span class="brand-star" aria-hidden="true">&#10022;</span>
             </a>
-            <p>Full-stack developer &middot; open to new roles</p>
+            <p>Analyst &amp; developer &middot; open to new roles</p>
           </div>
           <div class="footer-links">
             <a href="../index.html#work">Work</a>
             <a href="../index.html#about">About</a>
-            <a href="../index.html#contact">Contact</a>
-            <a href="../Wipabhorn_Saeyang_Resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute;</a>
+            <a href="../links.html">Contact</a>
           </div>
           <div class="footer-social">
             <a href="mailto:wipabhorn26@gmail.com" aria-label="Email"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <rect x="3" y="5" width="18" height="14" rx="2" /> <path d="M3 7l9 6 9-6" /> </svg></a>
@@ -164,7 +163,7 @@
         </div>
         <div class="footer-bottom">
           <p>&copy; 2026 Wipabhorn Saeyang &middot; Built with HTML, CSS, JavaScript and Three.js</p>
-          <a class="footer-up" href="#">Back to top &uarr;</a>
+          <a class="footer-up" href="#">Back to top <svg class="i i-up" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
         </div>
       </div>
     </footer>

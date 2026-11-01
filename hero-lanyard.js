@@ -26,7 +26,7 @@ const CONFIG = {
     nickname: 'PRAEW',               // biggest text
     firstName: 'WIPABHORN',
     lastName: 'SAEYANG',
-    role: 'Full-Stack Developer',    // shown in the highlight colour
+    role: 'Analyst & Developer',     // shown in the highlight colour
     badge: 'OPEN TO WORK',
     signature: 'Praew',
     // Where the QR code takes people. '' = the links page (links.html) next to
@@ -44,9 +44,9 @@ const CONFIG = {
     tiny: 'ABOUT ME',
     title: 'What I do',
     rows: [
-      { label: 'Frontend', text: 'Next.js, React, TypeScript and Tailwind CSS. Responsive, accessible interfaces.' },
-      { label: 'Backend', text: 'NestJS REST APIs with JWT sign-in, 2FA and online payments (Stripe, Opn).' },
-      { label: 'Database', text: 'PostgreSQL with Prisma: schema design and queries that keep data reliable.' },
+      { label: 'Analysis', text: 'Requirements gathering, workflow analysis and SRS documents a team can build from.' },
+      { label: 'Build', text: 'Next.js, React and NestJS web apps with sign-in, 2FA and online payments.' },
+      { label: 'Data', text: 'PostgreSQL with Prisma: database design and SQL that keep data reliable.' },
     ],
     footer: 'Wipabhorn Saeyang',
   },
@@ -63,7 +63,7 @@ const CONFIG = {
     soft: '#766E8C',
     faint: '#B9AECB',
     accent: '#B39DF0',     // number pills on the back
-    highlight: '#E5408A',  // "Full-Stack Developer"
+    highlight: '#E5408A',  // the role line
     dot: '#6FD08A',        // "open to work" dot
     strap: '#F4E1F1',
     stitch: '#D8B6DA',

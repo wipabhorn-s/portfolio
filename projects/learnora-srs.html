@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Learnora SRS — Wipabhorn Saeyang</title>
+    <meta name="description" content="Software Requirements Specification for Learnora, an online course marketplace: users and roles, features, functional requirements, data model and tech stack." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body class="scrolled">
+    <nav>
+      <a class="brand" href="../index.html" aria-label="Praew, home">
+        <span class="brand-sign">Praew</span>
+        <span class="brand-star" aria-hidden="true">&#10022;</span>
+      </a>
+      <div class="links">
+        <a class="active is-current" href="../index.html#work" aria-current="page">Work</a><a href="../index.html#about">About</a
+        ><a href="../links.html">Contact</a>
+      </div>
+    </nav>
+
+    <!-- SRS: an English, web version of the requirements document.
+         The original (Thai) is docs/Learnora-SRS.pdf, exported from Google Docs.
+         Requirements are numbered automatically by the CSS (1.1, 1.2 ...). -->
+    <main class="cs-page srs-page">
+      <div class="crumbs" role="navigation" aria-label="Breadcrumb"><ol><li><a href="../index.html#work">Work</a></li><li><a href="learnora.html">Learnora</a></li><li><span aria-current="page">SRS</span></li></ol></div>
+
+      <header class="cs-head">
+        <span class="rc-tag">Software Requirements Specification</span>
+        <h1>Learnora SRS</h1>
+        <p class="cs-summary">
+          The requirements I wrote before building Learnora, an online course marketplace for learners, instructors and admins.
+        </p>
+        <div class="cs-actions">
+          <a class="btn-pill" href="../docs/Learnora-SRS.pdf" target="_blank" rel="noopener">Download SRS (PDF) <svg class="i i-down" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+          <a class="btn-pill-outline" href="learnora-erd.html">View ERD</a>
+        </div>
+        <p class="srs-note">The original document is written in Thai (PDF above). This page is an English version of the same content.</p>
+      </header>
+
+      <div class="cs-facts">
+        <div class="cs-fact"><span>Author</span><strong>Wipabhorn Saeyang</strong></div>
+        <div class="cs-fact"><span>Users</span><strong>5 roles</strong></div>
+        <div class="cs-fact"><span>Requirements</span><strong>71, in 14 groups</strong></div>
+        <div class="cs-fact"><span>Data model</span><strong>16 tables</strong></div>
+      </div>
+
+      <div class="srs-toc" role="navigation" aria-label="On this page">
+        <a href="#overview">Overview</a><a href="#users">Users</a><a href="#features">Features</a
+        ><a href="#requirements">Requirements</a><a href="#data">Data model</a><a href="#stack">Tech stack</a>
+      </div>
+
+      <section class="cs-section" id="overview">
+        <h2>Background</h2>
+        <p>
+          Online learning keeps growing: learners want to study anywhere and at any time, and instructors want a place to publish and sell their courses. Learnora is a platform that connects the two in a way that is simple to use and well organised.
+        </p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Objective</h2>
+        <p>
+          Design an online learning and teaching platform for several groups of users (learners, instructors and administrators), with sign-in, course search, buying courses, video lessons and course management, that works on desktop, tablet and mobile.
+        </p>
+      </section>
+
+      <section class="cs-section">
+        <h2>Scope</h2>
+        <p>
+          A website where learners search for courses, read the details, buy them and study through video lessons. They can save courses to a wishlist and follow their own progress. The main capabilities are:
+        </p>
+        <ul class="cs-list">
+          <li>Sign-up and sign-in with email or Google</li>
+          <li>Account security: two-step verification, changing the password and deleting the account</li>
+          <li>Searching, listing and viewing course details</li>
+          <li>A wishlist and a shopping cart</li>
+          <li>Buying several courses in one payment</li>
+          <li>Refunds per course, reviewed by an admin</li>
+          <li>My Courses and a video lesson player with progress tracking</li>
+          <li>Course and lesson management for instructors</li>
+          <li>Instructor earnings and recorded payouts</li>
+          <li>Admin tools for users, course moderation, payments, refund requests and reports</li>
+        </ul>
+      </section>
+
+      <section class="cs-section" id="users">
+        <h2>Users and roles</h2>
+        <p>
+          There are three roles: Student, Admin and Super Admin. Teaching is not a separate role but a capability a Student account can turn on, so one person can learn and teach with the same account.
+        </p>
+        <div class="srs-roles">
+          <div class="srs-role">
+            <h3>Guest<small>Not signed in</small></h3>
+            <p>Browses the home page, searches and reads course details, views instructor profiles, and signs up or signs in. Must sign in to use the wishlist, the cart or checkout.</p>
+          </div>
+          <div class="srs-role">
+            <h3>Student<small>Default role for every sign-up</small></h3>
+            <p>Buys courses or enrols in free ones, studies through video lessons, tracks progress, manages the wishlist and cart, sees purchase history and asks for refunds.</p>
+          </div>
+          <div class="srs-role">
+            <h3>Instructor<small>A capability of a Student</small></h3>
+            <p>Turned on at sign-up or later from the Teach page after accepting the instructor terms. Creates and manages own courses and lessons, sets prices and access periods, sees sales and students, earns 70% of each sale and saves a payout bank account. Can still buy and study other courses.</p>
+          </div>
+          <div class="srs-role">
+            <h3>Admin<small>Created by a Super Admin</small></h3>
+            <p>Cannot sign up from the website. Manages users (suspend or reactivate), suspends inappropriate courses, reviews payments and refund requests, records instructor payouts and sees platform reports. Cannot buy or study courses.</p>
+          </div>
+          <div class="srs-role">
+            <h3>Super Admin<small>Highest level</small></h3>
+            <p>Everything an Admin can do, plus creating Admin accounts and suspending or reactivating them.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-section" id="features">
+        <h2>System features</h2>
+        <ul class="cs-list">
+          <li><strong>Sign-up and sign-in:</strong> create an account or sign in with email or Google.</li>
+          <li><strong>Account security:</strong> two-step verification by email, change the password or email, connect Google, sign out of every device and delete the account.</li>
+          <li><strong>Course search:</strong> search by keyword, filter by category, level or access type (limited period or lifetime), and sort by newest or price.</li>
+          <li><strong>Course details:</strong> title, instructor, price, description, learning outcomes, requirements, curriculum, instructor bio and access period.</li>
+          <li><strong>Wishlist:</strong> save courses to come back to or buy later.</li>
+          <li><strong>Cart:</strong> add courses, review them and pay for several at once.</li>
+          <li><strong>Buying and payment:</strong> card, PromptPay, TrueMoney Wallet or mobile banking, and free courses in one click.</li>
+          <li><strong>Refunds:</strong> per course, within 14 days of payment, approved or declined by an admin.</li>
+          <li><strong>Learning:</strong> video lessons, the lesson list, progress, and resuming each lesson where it was left.</li>
+          <li><strong>Course and lesson management:</strong> instructors create, edit and delete courses, and add, edit, reorder and delete lessons.</li>
+          <li><strong>Instructor earnings:</strong> a 70% share of sales, a summary of earnings and balance ready to pay out, payout history and a bank account.</li>
+          <li><strong>Administration:</strong> user accounts (including instructors), course moderation, payment status, refund requests and platform reports.</li>
+        </ul>
+      </section>
+
+      <section class="cs-section" id="requirements">
+        <h2>Functional requirements</h2>
+        <div class="srs-tools">
+          <button type="button" data-srs="open">Open all</button>
+          <button type="button" data-srs="close">Close all</button>
+        </div>
+        <div class="srs-groups">
+          <details class="srs-group" open>
+            <summary>Sign-up and sign-in <span class="srs-count">11</span></summary>
+            <ol>
+              <li>Users can sign up with email or Google.</li>
+              <li>Users must accept the Terms of Service and Privacy Policy before signing up.</li>
+              <li>The system validates the input, such as name, email and password.</li>
+              <li>A password is 8–72 characters with a lowercase letter, an uppercase letter, a number and a symbol.</li>
+              <li>The system warns when information is missing or invalid.</li>
+              <li>Users who sign up with email must verify the address before they can sign in.</li>
+              <li>Users can sign in with email or Google.</li>
+              <li>After 5 wrong passwords within 15 minutes, sign-in is locked for 15 minutes.</li>
+              <li>Users can reset the password through a link sent by email.</li>
+              <li>The system separates the roles Student, Admin and Super Admin, and keeps the teaching capability apart, so a learner can teach without losing access to learning.</li>
+              <li>Users can turn on teaching at sign-up or later from the Teach page, after accepting the instructor terms.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Account security <span class="srs-count">5</span></summary>
+            <ol>
+              <li>Users can turn on two-factor authentication (2FA) with a 6-digit code sent by email.</li>
+              <li>Users can change the password and email, and connect or disconnect a Google account.</li>
+              <li>Users can sign out of every device.</li>
+              <li>Users can delete their own account. Personal data is erased, and anonymised purchase records are kept for accounting.</li>
+              <li>Users can edit first name, last name, profile picture and an instructor bio.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Course search and listing <span class="srs-count">7</span></summary>
+            <ol>
+              <li>Users can see every course on the platform.</li>
+              <li>Users can search by course title or keyword.</li>
+              <li>Users can filter by category, level and access type.</li>
+              <li>Users can sort by newest, price low to high or price high to low.</li>
+              <li>Each course shows its image, title, instructor, price and access period.</li>
+              <li>The system shows a message when no course matches the search.</li>
+              <li>Users can open an instructor's profile with their bio and published courses.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Course details <span class="srs-count">4</span></summary>
+            <ol>
+              <li>Users can read a course's details before buying.</li>
+              <li>The page shows the title, description, learning outcomes, requirements, instructor, price and number of lessons.</li>
+              <li>The page shows the access type: lifetime or for a set period.</li>
+              <li>From this page users can add the course to the cart, enrol in a free course, or add it to the wishlist.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Wishlist <span class="srs-count">4</span></summary>
+            <ol>
+              <li>Students can add courses to the wishlist.</li>
+              <li>Students can see the courses in their wishlist.</li>
+              <li>Students can remove courses from the wishlist.</li>
+              <li>The system shows a message when the wishlist is empty.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Cart <span class="srs-count">2</span></summary>
+            <ol>
+              <li>Students can add courses to the cart, review them and remove them.</li>
+              <li>Students can pay for several courses in the cart at once.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Buying and payment <span class="srs-count">9</span></summary>
+            <ol>
+              <li>Students can choose the courses they want to buy.</li>
+              <li>Free courses are enrolled in straight away, without payment.</li>
+              <li>The system shows the courses, prices and total before payment.</li>
+              <li>Students can choose from the payment methods the system offers.</li>
+              <li>Supported methods: credit/debit card, PromptPay, TrueMoney Wallet and mobile banking (KBank, SCB, KTB, BBL, BAY).</li>
+              <li>The system checks the payment before confirming the order.</li>
+              <li>The system shows whether the payment succeeded or failed.</li>
+              <li>After a successful payment, the courses are added to the student's courses.</li>
+              <li>Students can see their purchase history.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Refunds <span class="srs-count">3</span></summary>
+            <ol>
+              <li>Students can ask for a refund per course within 14 days of payment, with a reason, once per course.</li>
+              <li>Admins approve or decline a request; declining needs a reason.</li>
+              <li>The student is told the result by email.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Learning <span class="srs-count">8</span></summary>
+            <ol>
+              <li>Students see the courses they bought on the My Courses page.</li>
+              <li>Students study through the video lesson page.</li>
+              <li>The system shows the lessons in a course.</li>
+              <li>Students can pick which lesson to study.</li>
+              <li>The system shows the student's progress.</li>
+              <li>The system shows each course's status, such as Active, Expired or Lifetime.</li>
+              <li>Lesson video links expire within 6 hours, so shared links stop working.</li>
+              <li>Students have a dashboard of enrolled courses and progress.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Course and lesson management <span class="srs-count">5</span></summary>
+            <ol>
+              <li>Instructors can add, edit and delete their own courses. A course that students have bought can only be unpublished.</li>
+              <li>Instructors set the course title, description, price, category and access period.</li>
+              <li>Instructors can add, list, edit, delete and reorder lessons in a course.</li>
+              <li>A lesson has a title, a position and a video; the system works out the video length automatically.</li>
+              <li>The system shows each course's status: Draft, Published, or Suspended (when an admin suspends it).</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Instructor earnings <span class="srs-count">5</span></summary>
+            <ol>
+              <li>Instructors receive 70% of each course sale.</li>
+              <li>A sale becomes ready to pay out once its 14-day refund window has passed and no refund request is pending.</li>
+              <li>Instructors can see their earnings summary and payout history, and save a bank account for payouts.</li>
+              <li>Admins can see what each instructor is owed and record bank transfers; the instructor is emailed.</li>
+              <li>Instructors have a dashboard with their number of courses, students, total revenue and latest buyers.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>User management <span class="srs-count">4</span></summary>
+            <ol>
+              <li>Admins can list every user, with search and filters.</li>
+              <li>Admins can suspend or reactivate Student accounts, including accounts that teach.</li>
+              <li>Admins cannot suspend their own account or another admin's.</li>
+              <li>Super Admins can create Admin accounts and suspend or reactivate them.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Course moderation <span class="srs-count">2</span></summary>
+            <ol>
+              <li>Admins can list every course and filter by status.</li>
+              <li>Admins can suspend a published course that breaks the rules or is inappropriate, and lift the suspension. Suspended courses do not appear in the catalogue.</li>
+            </ol>
+          </details>
+          <details class="srs-group">
+            <summary>Reports and overview <span class="srs-count">2</span></summary>
+            <ol>
+              <li>Admins see a platform overview: users, courses, sales, number of purchases, a revenue chart and the latest payments.</li>
+              <li>Admins can see a payments report.</li>
+            </ol>
+          </details>
+        </div>
+      </section>
+
+      <section class="cs-section" id="data">
+        <h2>Data model</h2>
+        <p>Sixteen PostgreSQL tables, drawn as a diagram on its own page.</p>
+        <div class="cs-docs">
+          <a class="cs-doc" href="learnora-erd.html">
+            <span class="cs-doc-kicker">ERD</span>
+            <div class="cs-doc-thumb"><img src="../images/erd/learnora.svg" alt="" loading="lazy" /></div>
+            <h3>Entity relationship diagram</h3>
+            <p>16 tables: users, courses, lessons, purchases, refunds, payouts and the security tables.</p>
+            <span class="cs-doc-go">Open the diagram <svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="cs-doc" href="../docs/Learnora-SRS.pdf" target="_blank" rel="noopener">
+            <span class="cs-doc-kicker">PDF &middot; Thai</span>
+            <div class="cs-doc-pages" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <h3>Original SRS document</h3>
+            <p>The full document as I wrote it, exported from Google Docs.</p>
+            <span class="cs-doc-go">Download PDF <svg class="i i-down" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
+          </a>
+        </div>
+      </section>
+
+      <section class="cs-section" id="stack">
+        <h2>Tech stack</h2>
+        <dl class="cs-stack">
+          <div><dt>Frontend</dt><dd>Next.js 16 (App Router, Server Actions), TypeScript, React 19, Tailwind CSS 4, shadcn/ui + Base UI, lucide-react</dd></div>
+          <div><dt>Forms</dt><dd>React Hook Form, Zod (shared by the forms and the server actions)</dd></div>
+          <div><dt>Backend</dt><dd>NestJS 11, TypeScript, Prisma ORM 7, PostgreSQL, class-validator / class-transformer</dd></div>
+          <div><dt>Auth</dt><dd>NextAuth v5 (Credentials + Google), JWT with rotating refresh tokens, bcrypt, google-auth-library, 2FA with 6-digit email codes</dd></div>
+          <div><dt>Security</dt><dd>Helmet, @nestjs/throttler (rate limits per IP), AES-256-GCM for instructors' bank account numbers</dd></div>
+          <div><dt>Payments</dt><dd>Opn Payments / Omise (card, PromptPay, TrueMoney Wallet, mobile banking), Omise.js card tokens in the browser</dd></div>
+          <div><dt>Files</dt><dd>Cloudinary (avatars, course thumbnails, lesson videos with signed URLs), react-easy-crop</dd></div>
+          <div><dt>Email</dt><dd>Brevo transactional email API</dd></div>
+          <div><dt>Testing</dt><dd>Jest + Supertest (API), Vitest + Testing Library (web)</dd></div>
+          <div><dt>Hosting</dt><dd>Vercel (web, Singapore), Render (API, Singapore), Neon (PostgreSQL)</dd></div>
+          <div><dt>Tools</dt><dd>pnpm 11 (Corepack), ESLint + Prettier, Git + GitHub</dd></div>
+        </dl>
+      </section>
+
+      <div class="cs-pager" role="navigation" aria-label="More pages">
+        <a class="cs-pager-link prev" href="learnora.html"><svg class="i i-left" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span><small>Back to the case study</small>Learnora</span></a>
+        <a class="cs-pager-link next" href="aumstocks-srs.html"><span><small>Next SRS</small>AumStocks</span><svg class="i i-right" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-id">
+            <a class="footer-brand" href="../index.html" aria-label="Praew, home">
+              <span class="brand-sign">Praew</span>
+              <span class="brand-star" aria-hidden="true">&#10022;</span>
+            </a>
+            <p>Analyst &amp; developer &middot; open to new roles</p>
+          </div>
+          <div class="footer-links">
+            <a href="../index.html#work">Work</a>
+            <a href="../index.html#about">About</a>
+            <a href="../links.html">Contact</a>
+          </div>
+          <div class="footer-social">
+            <a href="mailto:wipabhorn26@gmail.com" aria-label="Email"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> <rect x="3" y="5" width="18" height="14" rx="2" /> <path d="M3 7l9 6 9-6" /> </svg></a>
+            <a href="https://www.linkedin.com/in/wipabhorn-s/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"> <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /> </svg></a>
+            <a href="https://github.com/wipabhorn-s" target="_blank" rel="noopener" aria-label="GitHub"><svg class="footer-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"> <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /> </svg></a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>&copy; 2026 Wipabhorn Saeyang &middot; Built with HTML, CSS, JavaScript and Three.js</p>
+          <a class="footer-up" href="#">Back to top <svg class="i i-up" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // "Open all" / "Close all" for the requirement groups
+      document.querySelectorAll('[data-srs]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var open = b.dataset.srs === 'open';
+          document.querySelectorAll('.srs-group').forEach(function (d) { d.open = open; });
+        });
+      });
+    </script>
+  </body>
+</html>
